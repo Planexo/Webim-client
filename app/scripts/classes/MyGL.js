@@ -1,9 +1,11 @@
 'use strict'; 
 var MyGL = function () { 
 	var self = {};
-	const headerSize = 70;
-	const rightMenuRatio = 245;
-	const clearcolor = 0;//0xeeeeee;
+
+	//Constantes : Karma rejette l'utilisation de const
+	var headerSize = 70;
+	var rightMenuRatio = 245;
+	var clearcolor = 0;//0xeeeeee;
 
 	var _camera, 
 		_scene, 
@@ -69,13 +71,15 @@ var MyGL = function () {
         _scene.add(_camera);
 
         // create lights
-        let distancetozero = 5000;
+        var distancetozero = 5000;
+
         var light1 = new THREE.PointLight(0xffffff,1,distancetozero);
         var light2 = new THREE.PointLight(0x00ff00,1,distancetozero);
         var light3 = new THREE.PointLight(0xff0000,1,distancetozero);
         var light4 = new THREE.PointLight(0xffffff,1,distancetozero);
 
-        let lightdist = 30;
+        var lightdist = 30;
+        
         light1.position.set( lightdist,lightdist,lightdist);
 
         light2.position.set( -lightdist,lightdist,-lightdist);

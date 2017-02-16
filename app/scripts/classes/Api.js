@@ -8,7 +8,7 @@ var Api = function(Config){
 
 	var URL = Config.server().host+':'+Config.server().port+Config.apiPath;   
 
-	let baseurl = '/';
+	var baseurl = '/';
 
 	/*
 	Méthodes génériques à réutiliser dans les fonctions personnalisées 
