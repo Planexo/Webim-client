@@ -11,20 +11,18 @@ npm install
 
 # Test 
 
-- Lancer le client
-
-```
-
-cd Webim-client
-grunt serve
-http://localhost:9000/
-
-```
-
-- Lancer le serveur (suppose que le serveur a été installé)
+- Lancer le serveur (on suppose que le serveur a été installé)
 
 ```
 cd Webim-server
 npm start 
 ```
 
+- Lancer le client (http://localhost:9000/)
+
+```
+
+cd Webim-client
+grunt serve
+
+```
