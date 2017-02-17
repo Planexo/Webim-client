@@ -8,8 +8,6 @@ var Api = function(Config){
 
 	var URL = Config.server().host+':'+Config.server().port+Config.apiPath;   
 
-	var baseurl = '/';
-
 	/*
 	Méthodes génériques à réutiliser dans les fonctions personnalisées 
 	------------------------------------------------------------------------
@@ -28,35 +26,85 @@ var Api = function(Config){
 			.always(final);
 	};
 
+	/**
+	*	Initialise une fonction. Peut-etre utilisé comme alternative pour remplacer une fonction callback
+	*	Ex : 
+	*	var maFonction = callbackFunction || initFunction
+	*	Si callback n'est pas défini, initFunction sera utilsiée.
+	*/
 	var initFunction = function (func) {
 		return function(){};
 	};
- 
-
 
 	/*
 	Méthodes correspondant aux routes de l'api : à définir au fir et à mesure
 	------------------------------------------------------------------------
-	*/
+	*/ 
 
-	self.getIfc = function (filename, success, failure, final) {
-		baseurl = '/ifc/';  
+	/*------------------------------------------------------------------------
+		Collection ifc/
+	/------------------------------------------------------------------------*/
 
-		get(baseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction); 
-	};
+	self.ifc = (function () {
+		var ifc = {};
+		var baseurl = '/ifc/';
 
-	self.getIfcMtl = function (filename, success, failure, final) {
-		baseurl = '/ifc/mtl/';  
+		/**
+		*	Charge un fichier ifc
+		*/
+		ifc.load = function (filename, success, failure, final) { 
+			get(baseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction); 
+		};
 
-		get(baseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction);  
-	};
+		/**
+		*	Charge les parties obj et mtl d'un fichier ifc
+		*/
+		ifc.parts = function (filename, success, failure, final) {
+			var localbaseurl = baseurl+'parts/';  
 
-	self.getIfcObj = function (filename, success, failure, final) {
-		baseurl = '/ifc/obj/';
+			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction); 
+		};
 
-		get(baseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction); 
-	};
+		/**
+		*	Charge la partie mtl d'un fichier ifc
+		*/
+		ifc.mtl = function (filename, success, failure, final) {
+			var localbaseurl = baseurl+'mtl/';  
 
+			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction); 
+		};
+
+		/**
+		*	Charge la partie obj d'un fichier ifc
+		*/
+		ifc.obj = function (filename, success, failure, final) {
+			var localbaseurl = baseurl+'obj/';  
+
+			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction); 
+		};
+
+		return ifc;
+	})();
+
+	/*------------------------------------------------------------------------
+		Collection mtl/
+	/------------------------------------------------------------------------*/
+
+	self.mtl = (function () {
+		var mtl = {};
+
+		return mtl;
+	})();
+
+	/*------------------------------------------------------------------------
+		Collection obj/
+	/------------------------------------------------------------------------*/
+
+	self.obj = (function () {
+		var obj = {};
+
+		return obj;
+	})();
 
 	return self;
 };

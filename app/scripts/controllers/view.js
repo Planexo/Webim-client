@@ -26,47 +26,37 @@ angular.module('webimClientApp')
 		mygl.initGL("GLDiv"); 
 		mygl.animate();
 
-		//récupération du fichier MTL
-		api.getIfcMtl(
-			'1.ifc.mtl',
-			function(serverResponse){ // succès 
+		//Exemples d'utilisation
 
-				var mtlLoader = new THREE.MTLLoader()
-				var material = mtlLoader.parse(serverResponse.data);
-				material.preload(); 
-
-				//récupération du fichier OBJ
-				api.getIfcObj(
-					'1.ifc.obj',
-					function (serverResponse2) { // succès 
-
-						var loaderB = new THREE.OBJLoader();
-						loaderB.setMaterials(material);
-						var obj = loaderB.parse(serverResponse2.data);
-
-						//ajout de l'objet sur la scène
-						mygl.clearScene();
-						mygl.addOnScene(obj);
-
-						//on fait pointer la camera sur l'objet
-						mygl.cameraOn(obj); 
-					},
-					function (serverResponse2) { // echec
-						// body...
-					}
-				); 
-
-					
-			},
-			function(serverResponse){ //echec
-				console.log("echec");
-
-			} 
+		api.ifc.load(
+			'1.ifc',
+			function (serverResponse) {
+				console.log(serverResponse);
+			}
 		);
 
-		
- 
-						 
+		// Exemple qui permet d'afficher l'obj
+		api.ifc.parts(
+			'1.ifc',
+			function (serverResponse) { 
+
+				var mtlLoader = new THREE.MTLLoader()
+				var material = mtlLoader.parse(serverResponse.mtl);
+				material.preload(); 
+
+				var loaderB = new THREE.OBJLoader();
+				loaderB.setMaterials(material);
+				var obj = loaderB.parse(serverResponse.obj);
+
+				//ajout de l'objet sur la scène
+				mygl.clearScene();
+				mygl.addOnScene(obj);
+
+				//on fait pointer la camera sur l'objet
+				mygl.cameraOn(obj); 
+			}
+		); 
+		 			 
 	}
 
 	// Fonctions à implémenter en fonctions des boutons qu'on rajoute à l'interface
