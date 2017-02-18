@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Planexo/Webim-client.svg?branch=master)](https://travis-ci.org/Planexo/Webim-client)
+
 # Webim-client
 Implémentation du client
 
