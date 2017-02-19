@@ -2,4 +2,6 @@ anguage: node_js
 node_js:
   - "7.5"
 script:
+  - bower install
+  - npm install
   - npm test
