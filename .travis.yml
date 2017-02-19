@@ -1,7 +1,8 @@
-anguage: node_js
+language: node_js
 node_js:
   - "7.5"
 script:
   - bower install
   - npm install
   - npm test
+sudo: required
