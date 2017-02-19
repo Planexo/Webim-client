@@ -33,14 +33,19 @@
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2",
     "phantomjs-prebuilt": "^2.1.14",
+    "pre-commit": "^1.2.2",
     "time-grunt": "^1.0.0"
   },
   "engines": {
     "node": ">=0.10.0"
   },
-  "scripts": { 
+  "scripts": {
+    "updatePrecommitMessage":"chmod +x bin/updatePrecommitMessage.sh; bin/updatePrecommitMessage.sh",
     "test": "karma start test/karma.conf.js"
   },
-  "dependencies": {  
-  }
+  "dependencies": {},
+  "pre-commit":[
+    "updatePrecommitMessage",
+    "test"
+  ]
 }
