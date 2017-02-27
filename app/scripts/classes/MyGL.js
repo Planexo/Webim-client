@@ -1,4 +1,10 @@
-'use strict'; 
+'use strict';
+/**
+ * MyGL
+ * Cet objet gère la scène et les objets qui s'y trouvent.
+ * @returns {{}}
+ * @constructor
+ */
 var MyGL = function () { 
 	var self = {};
 
@@ -7,16 +13,41 @@ var MyGL = function () {
 	var rightMenuRatio = 245;
 	var clearcolor = 0;//0xeeeeee;
 
-	var _camera, 
-		_scene, 
-		_renderer, 
+    /**
+	 * Gestion de la caméra
+     * @private
+     */
+	var _camera,
+        /**
+		 * Gestion de la scène
+         * @private
+         */
+		_scene,
+        /**
+		 * Gestion du rendu
+         * @private
+         */
+		_renderer,
+        /**
+		 * Gestion du trackball
+         * @private
+         */
 		_trackball,
+        /**
+		 * Liste des éléments ajoutés à la scène
+         * @type {Array}
+         * @private
+         */
 		_entities = []; 
 
 	//---------------------------------------------------------------------------------------
 	//	WebGL
 	//---------------------------------------------------------------------------------------
-	
+
+    /**
+	 * Cette fonction semble indiquer si le navigateur supporte la technologie WebGL ou non
+     * @returns {boolean}
+     */
 	var hasWebGL = function () {
 	    try {
 	      var canvas = document.createElement('canvas');
@@ -30,12 +61,12 @@ var MyGL = function () {
 	    catch (e) {
 	      return false;
 	    };
-	}
+	};
 
-
-	/**
-		@Param divContainer : l'id de la balise dans laquelle afficher le viewer
-	*/
+    /**
+	 *
+     * @param divContainer: l'id de la balise dans laquelle afficher le viewer
+     */
 	self.initGL = function (divContainer) {
 
         //no_scene = no_scene || true;
@@ -132,19 +163,28 @@ var MyGL = function () {
         container.appendChild(_renderer.domElement);
 
         window.addEventListener( 'resize', onWindowResize, false );
-	}
-	         
+	};
+
+    /**
+	 * Cette fonction lance l'animation de façon récursive à intervalle régulier
+     */
 	self.animate = function () {
 	    requestAnimationFrame(self.animate);
 	    _trackball.update();
 	    self.render();
-	}
+	};
 
+    /**
+	 * Cette fonction affiche la scène du point de vue de la camera
+     */
 	self.render = function () { 
 	    _renderer.render(_scene, _camera);
-	}
+	};
 
-	function onWindowResize(){
+    /**
+	 * Cette fonction repositionne la camera et raffraîchit le rendu quand la dimension de la page est modifiée.
+     */
+	var onWindowResize = function (){
 
 	    if(window.innerWidth<800){
 			_camera.aspect = (window.innerWidth  - 20 ) / (window.innerHeight);
@@ -158,12 +198,36 @@ var MyGL = function () {
 
 			_renderer.setSize( 90*window.innerWidth/100  -rightMenuRatio , 70*window.innerHeight/100 - headerSize);
 		}
-	}
+	};
 
-	//---------------------------------------------------------------------------------------
-	//	Scene
-	//---------------------------------------------------------------------------------------
-	
+	/*---------------------------------------------------------------------------------------
+	 *	Scene
+	 * TODO : on pourrait au mieux créer un sous objet 'Scene' qui regroupe toutes les fonctionnalités ci-dessous, permettant
+	 * TODO : ainsi de bien mettre en évidence la logique du code
+	 * Par exemple :
+	 * self.scene = {
+	 * 		"add" : function(element){
+	 * 			_scene.add(element);
+	 * 			_entities.push(element);
+	 *		},
+	 * 		"remove" : function(element){
+	 * 			...
+	 *		}
+	 * };
+	 * Et dans le code, ca donnerait :
+	 * 		MyGL.scene.add(obj);
+	 * plutôt que
+	 * 		MyGL.addOnScene(obj);
+	 *---------------------------------------------------------------------------------------*/
+
+    /**
+	 * Généère un cube unitaire  à la position donnée
+     * @param x
+     * @param y
+     * @param z
+     * @returns {Raycaster.params.Mesh|{}|*|Mesh}
+     * @constructor
+     */
 	self.Cube = function (x,y,z){
 		var geometry = new THREE.BoxGeometry( 1,1,1 );
 		var material = new THREE.MeshPhongMaterial( { color: 0xbebead } );
@@ -171,39 +235,54 @@ var MyGL = function () {
 		cube.position.set(x,y,z );
 		
 		return cube;
-	}
+	};
 
+    /**
+	 * Ajoute l'élément à la scène
+     * @param element {Raycaster.params.Mesh|{}|*|Mesh}
+     */
 	self.addOnScene = function (element) {  
 		if( element){  
 			_scene.add(element);
 			_entities.push(element);
 		}		
-	}
+	};
 
+    /**
+     * Supprime l'élément de la scène
+     * @param element {Raycaster.params.Mesh|{}|*|Mesh}
+     */
 	self.removeFromScene = function (element)      {   
 		if( element){  
-			_scene.remove(element); console.log('removed');
+			_scene.remove(element);
 			for (var i = 0; i < _entities.length; i++) {
 				if(element == _entities[i])
 			  		_scene.remove(_entities[i]);
 			} 
 		}
-	}
+	};
 
+    /**
+	 * Supprime tous les éléments de la scène
+     */
 	self.clearScene = function ()      { 
 		for (var i = 0; i < _entities.length; i++) {
 		  	_scene.remove(_entities[i]);
 		}  
-	}
+	};
 
+    /**
+	 * Braque la caméra sur l'objet donné
+     * @param element {Raycaster.params.Mesh|{}|*|Mesh}
+     */
 	self.cameraOn = function (element) {  
 		if( element.type == 'Mesh'){  
 			_camera.lookAt(element.position); 
 		}
-	}
+	};
 
 	return self;
-}
+};
 
 /*
 

@@ -4,64 +4,95 @@
  * @ngdoc function
  * @name webimClientApp.controller:ViewCtrl
  * @description
+ * Ce controller gère l'intéraction avec la scène.
  * # ViewCtrl
  * Controller of the webimClientApp
  */
 angular.module('webimClientApp')
-  .controller('ViewCtrl', function ($scope) {
-    this.awesomeThings = [
-      'HTML5 Boilerplate', 
-      'AngularJS',
-      'Karma'
-    ];
+    .controller('ViewCtrl', function ($scope) {
+        this.awesomeThings = [
+            'HTML5 Boilerplate',
+            'AngularJS',
+            'Karma'
+        ];
 
-    var mygl = null;  
-	var api = null;
+        /**
+         * L'objet qui permet d'intéragir avec la scène
+         * @type {MyGL}
+         */
+        var mygl = null;
 
+        /**
+         * L'objet qui permet d'effectuer des requêtes sur l'API
+         * @type {Api}
+         */
+        var api = null;
 
-	$scope.init = function () {  
-		mygl = (new MyGL());
-		api = new Api(Config); 
+        /**
+         * Fonction d'initilisation appelée au chargement de la vue 'View'
+         */
+        $scope.init = function () {
+            mygl = new MyGL();
+            api = new Api(Config);
 
-		mygl.initGL("GLDiv"); 
-		mygl.animate();
+            //initialisation de la scène
+            mygl.initGL("GLDiv");
+            mygl.animate();
 
-		//Exemples d'utilisation
+            //Exemple d'utilisation 1  : charger un fichier et afficher la reponse du serveur dans la console
 
-		api.ifc.load(
-			'1.ifc',
-			function (serverResponse) {
-				console.log(serverResponse);
-			}
-		);
+            api.ifc.load(
+                '1.ifc',
+                function (serverResponse) {
+                    console.log(serverResponse);
+                }
+            );
 
-		// Exemple qui permet d'afficher l'obj
-		api.ifc.parts(
-			'1.ifc',
-			function (serverResponse) { 
+            // Exemple d'utilisation 2  : qui permet d'afficher la partie 'obj' du fichier 1.ifc
 
-				var mtlLoader = new THREE.MTLLoader()
-				var material = mtlLoader.parse(serverResponse.mtl);
-				material.preload(); 
+            api.ifc.parts(
+                '1.ifc',
+                function (serverResponse) {
+                    // Pour connaitre le contenu de 'serverResponse', consulter PostMan (Lien dans Api.js) ou le controlleur adéquat coté serveur
 
-				var loaderB = new THREE.OBJLoader();
-				loaderB.setMaterials(material);
-				var obj = loaderB.parse(serverResponse.obj);
+                    //récupération du matériel dans serverResponse.mtl
+                    var mtlLoader = new THREE.MTLLoader()
+                    var material = mtlLoader.parse(serverResponse.mtl);
+                    material.preload();
 
-				//ajout de l'objet sur la scène
-				mygl.clearScene();
-				mygl.addOnScene(obj);
+                    //récupération de l'objet serverResponse.obj
+                    var loaderB = new THREE.OBJLoader();
+                    loaderB.setMaterials(material);
+                    var obj = loaderB.parse(serverResponse.obj);
 
-				//on fait pointer la camera sur l'objet
-				mygl.cameraOn(obj); 
-			}
-		); 
-		 			 
-	}
+                    //ajout de l'objet sur la scène
+                    mygl.clearScene();
+                    mygl.addOnScene(obj);
 
-	// Fonctions à implémenter en fonctions des boutons qu'on rajoute à l'interface
-	$scope.ObjOnClick = function () {
-		// TODO
-	}
+                    //on fait pointer la camera sur l'objet
+                    mygl.cameraOn(obj);
+                }
+            );
 
-  });
+        };
+
+        // Fonctions à implémenter en fonction des boutons qu'on rajoute à l'interface
+
+        /**
+         * Exemple
+         * @constructor
+         */
+        $scope.ObjOnClick = function () {
+            // TODO
+        };
+
+        /**
+         * Exemple :
+         * clic sur un item de la liste des parties du fichier ifc
+         * @constructor
+         */
+        $scope.PartsItemOnClick = function () {
+            // TODO
+        };
+
+    });

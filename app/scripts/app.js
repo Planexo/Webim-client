@@ -20,21 +20,33 @@ angular
   ])
   .config(function ($routeProvider) {
     $routeProvider
+      /*
+      * Page principale, choix du projet IFC à visualiser
+      */
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
         controllerAs: 'main'
       })
+      /*
+      * Page d'informations
+      */
       .when('/about', {
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl',
         controllerAs: 'about'
       })
+      /*
+      * Page de visualisation
+      */
       .when('/view', {
         templateUrl: 'views/view.html',
         controller: 'ViewCtrl',
         controllerAs: 'view'
       })
+      /*
+      * Redirection de toutes autres demandes vers l'accueil
+      */
       .otherwise({
         redirectTo: '/'
       });
