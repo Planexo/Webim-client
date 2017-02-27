@@ -1,4 +1,4 @@
-'use strict'; 
+'use strict';
 /**
 * @class Config
 *	Cette fonction contient les configurations 'development' et 'production'
@@ -14,12 +14,12 @@ var Config = (function () {
    * @private
    */
 	var _server = {
-		dev:{ 
+		dev:{
 			host: 'http://localhost',
 			port: 8000
 		},
 		prod:{
-			 
+
 		}
 	};
 
@@ -30,12 +30,12 @@ var Config = (function () {
    * @type {{dev: {apikey: string}, prod: {}}}
    * @private
    */
-	var _security = {
-		dev:{ 
-			apikey:""
+	var _api = {
+		dev:{
+			apikey:"kjlsd4568dfsds564zz"
 		},
 		prod:{
-			 
+
 		}
 	};
 
@@ -60,11 +60,11 @@ var Config = (function () {
 	};
 
   /**
-   * Récupère les clés de sécurité pour un environnement donné
+   * Récupère les données liées à l'api pour un environnement donné
    * @returns {*}
    */
-	self.security = function () {
-		return _security[self.environnement];
+	self.api = function () {
+		return _api[self.environnement];
 	};
 
 	return self;

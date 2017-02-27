@@ -18,12 +18,16 @@ var Api = function(Config){
      * L'en-tête de l'url de toutes les requêtes à destination du serveur Bim
      * @type {string}
      */
-	var URL = Config.server().host+':'+Config.server().port+Config.apiPath;   
+	var URL = Config.server().host+':'+Config.server().port+Config.apiPath;
 
 	/*
-	Méthodes génériques à réutiliser dans les fonctions personnalisées 
+	Méthodes génériques à réutiliser dans les fonctions personnalisées
 	------------------------------------------------------------------------
 	*/
+
+  $.ajaxSetup({
+    headers: { 'apikey': Config.api().apikey }
+  });
 
     /**
      * Récupère des données du serveur
@@ -33,11 +37,15 @@ var Api = function(Config){
      * @param failure : Fonction callback en cas d'échec
      * @param final : Fonction callback peu importe le résultat
      */
-	var get = function (url, parameters, success, failure, final) { 
-		var jqxhr = $.ajax({method:'GET',url:URL+url,data:parameters})
+	var get = function (url, parameters, success, failure, final) {
+		var jqxhr = $.ajax({
+        method:'GET',
+        url:URL+url,
+        data:parameters
+		  })
 			.done(success)
 			.fail(failure)
-			.always(final); 
+			.always(final);
 	};
 
     /**
@@ -72,7 +80,7 @@ var Api = function(Config){
 	/*
 	Méthodes correspondant aux routes de l'api : à définir au fur et à mesure
 	------------------------------------------------------------------------
-	*/ 
+	*/
 
 	/*------------------------------------------------------------------------
 		Collection ifc/
@@ -89,8 +97,8 @@ var Api = function(Config){
          * @param failure
          * @param final
          */
-		ifc.load = function (filename, success, failure, final) { 
-			get(baseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction); 
+		ifc.load = function (filename, success, failure, final) {
+			get(baseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction);
 		};
 
         /**
@@ -101,9 +109,9 @@ var Api = function(Config){
          * @param final
          */
 		ifc.parts = function (filename, success, failure, final) {
-			var localbaseurl = baseurl+'parts/';  
+			var localbaseurl = baseurl+'parts/';
 
-			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction); 
+			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction);
 		};
 
         /**
@@ -114,9 +122,9 @@ var Api = function(Config){
          * @param final
          */
 		ifc.mtl = function (filename, success, failure, final) {
-			var localbaseurl = baseurl+'mtl/';  
+			var localbaseurl = baseurl+'mtl/';
 
-			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction); 
+			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction);
 		};
 
         /**
@@ -127,9 +135,9 @@ var Api = function(Config){
          * @param final
          */
 		ifc.obj = function (filename, success, failure, final) {
-			var localbaseurl = baseurl+'obj/';  
+			var localbaseurl = baseurl+'obj/';
 
-			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction); 
+			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction);
 		};
 
 		return ifc;
