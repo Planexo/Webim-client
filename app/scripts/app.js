@@ -45,6 +45,14 @@ angular
         controllerAs: 'view'
       })
       /*
+      * Page de contact
+      */
+      .when('/contact', {
+        templateUrl: 'views/contact.html',
+        controller: 'ContactCtrl',
+        controllerAs: 'contact'
+      })
+      /*
       * Redirection de toutes autres demandes vers l'accueil
       */
       .otherwise({

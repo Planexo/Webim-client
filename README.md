@@ -5,26 +5,36 @@ Implémentation du client
 
 # Installation 
 
+Installer :
+1. [NodeJS](https://nodejs.org/),
+2. npm,
+3. [Grunt](http://gruntjs.com/),
 ```
-cd Webim-client
+npm install -g grunt-cli
+npm i grunt-contrib-compass
+```
+4. [Bower](https://www.npmjs.com/package/bower),
+```
+npm install -g bower
+```
+5. [Ruby](http://rubyinstaller.org/),
+6. Compass
+```
+gem install compass
+```
+
+Puis lancer :
+```
 npm install
-
+bower install
 ```
 
-# Test 
+# Lancement 
 
-- Lancer le serveur (on suppose que le serveur a été installé)
+1. Lancer le [serveur](https://github.com/Planexo/Webim-server)
 
+2. Lancer le client
 ```
-cd Webim-server
-npm start 
-```
-
-- Lancer le client (http://localhost:9000/)
-
-```
-
-cd Webim-client
 grunt serve
-
 ```
+3. [Accéder à l'interface](http://localhost:9000/)
