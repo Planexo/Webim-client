@@ -6,22 +6,12 @@ Implémentation du client
 # Installation 
 
 Installer :
-1. [NodeJS](https://nodejs.org/),
-2. npm,
-3. [Grunt](http://gruntjs.com/),
-```
-npm install -g grunt-cli
-npm i grunt-contrib-compass
-```
-4. [Bower](https://www.npmjs.com/package/bower),
-```
-npm install -g bower
-```
-5. [Ruby](http://rubyinstaller.org/),
-6. Compass
-```
-gem install compass
-```
+1. [NodeJS](https://nodejs.org/)
+2. npm
+3. [Grunt](http://gruntjs.com/) `npm install -g grunt-cli` `npm i grunt-contrib-compass`
+4. [Bower](https://www.npmjs.com/package/bower) `npm install -g bower`
+5. [Ruby](http://rubyinstaller.org/)
+6. Compass `gem install compass`
 
 Puis lancer :
 ```

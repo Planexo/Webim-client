@@ -93,22 +93,21 @@ var MyGL = function () {
         _scene.add(cube);
         _scene.add(cube2);*/
 
-        _camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-		_camera.position.z = 20;
-		_camera.position.x = 20;
-		_camera.position.y = 20;
-		//_camera.lookAt(cube.position); 
+        _camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+		_camera.position.set(10,10,2);
+		_camera.up.set(0,0,1);
+		_camera.lookAt(new THREE.Vector3 (0.0, 0.0, 0.0)); 
+		_camera.updateProjectionMatrix();
         _scene.add(_camera);
-
+		//alert(_camera.up.z);
         // create lights
         var distancetozero = 5000;
 
-        var light1 = new THREE.PointLight(0xffffff,1,distancetozero);
-        var light2 = new THREE.PointLight(0x00ff00,1,distancetozero);
-        var light3 = new THREE.PointLight(0xff0000,1,distancetozero);
-        var light4 = new THREE.PointLight(0xffffff,1,distancetozero);
-
+        var light1 = new THREE.PointLight(0xffffff,0.5,distancetozero);
+        var light2 = new THREE.PointLight(0x00ff00,0.5,distancetozero);
+        var light3 = new THREE.PointLight(0xff0000,0.5,distancetozero);
+        var light4 = new THREE.PointLight(0xffffff,0.5,distancetozero);
+		
         var lightdist = 30;
         
         light1.position.set( lightdist,lightdist,lightdist);
@@ -122,8 +121,11 @@ var MyGL = function () {
         _scene.add(light1);
         _scene.add(light2);
         _scene.add(light3);
-        _scene.add(light4); 
-
+        _scene.add(light4);
+		
+		addAxes();
+		Decord();
+		
         var spotLight = new THREE.SpotLight( 0xffffff );
 		spotLight.position.set( 200,200,200 );
 
@@ -145,6 +147,7 @@ var MyGL = function () {
         _trackball.zoomSpeed = 1.2;        
         _trackball.panSpeed = 0.8;
 
+		_trackball.noRotate = false;
         _trackball.noZoom = false;
         _trackball.noPan = false;
         _trackball.target.set(0, 0, 0);  
@@ -153,13 +156,14 @@ var MyGL = function () {
         _trackball.maxDistance = 300;
         _trackball.keys = [82, 90, 80]; // [r:rotate, z:zoom, p:pan]
         _trackball.addEventListener('change', self.render);
- 
+	
+		
         _renderer = new THREE.WebGLRenderer();//{ antialiasing: true }/*{ alpha: true }*/);  //CanvasRenderer();
         _renderer.setSize(width, height);
         _renderer.setClearColor( clearcolor, 1);  
  
 		var container = document.getElementById(divContainer); 
-
+		
         container.appendChild(_renderer.domElement);
 
         window.addEventListener( 'resize', onWindowResize, false );
@@ -200,6 +204,47 @@ var MyGL = function () {
 		}
 	};
 
+	
+	var addAxes = function() {
+		var material = new THREE.LineBasicMaterial({
+			color: 0xFF0000//rouge
+		});
+
+		var geometry = new THREE.Geometry();
+		geometry.vertices.push(
+			new THREE.Vector3( 5, 5, 5 ),
+			new THREE.Vector3( 6, 5, 5 ) // x
+		);
+
+		var line = new THREE.Line( geometry, material );
+		_scene.add( line );
+
+		var material2 = new THREE.LineBasicMaterial({
+			color: 0x0000FF // bleu
+		});
+
+		var geometry2 = new THREE.Geometry();
+		geometry2.vertices.push(
+			new THREE.Vector3( 5, 5, 5 ),
+			new THREE.Vector3( 5, 6, 5 ) // y
+		);
+
+		var line2 = new THREE.Line( geometry2, material2 );
+		_scene.add( line2 );
+		
+		var material3 = new THREE.LineBasicMaterial({
+			color: 0x00FF00 // vert
+		});
+
+		var geometry3 = new THREE.Geometry();
+		geometry3.vertices.push(
+			new THREE.Vector3( 5, 5, 5 ),
+			new THREE.Vector3( 5, 5, 6 ) //z
+		);
+
+		var line3 = new THREE.Line( geometry3, material3 );
+		_scene.add( line3 );
+	}
 	/*---------------------------------------------------------------------------------------
 	 *	Scene
 	 * TODO : on pourrait au mieux créer un sous objet 'Scene' qui regroupe toutes les fonctionnalités ci-dessous, permettant
@@ -220,6 +265,36 @@ var MyGL = function () {
 	 * 		MyGL.addOnScene(obj);
 	 *---------------------------------------------------------------------------------------*/
 
+	var Decord = function() {
+		// Sol
+		var geometry = new THREE.PlaneGeometry( 200, 200 );
+		var material = new THREE.MeshBasicMaterial( {color: 0x009900} );
+		var material2 = new THREE.MeshBasicMaterial( {color: 0x0000FF} );
+		var sol = new THREE.Mesh( geometry, material );
+		
+		var ciel1 = new THREE.Mesh( geometry, material2 );
+		ciel1.position.set(0,100,100);
+		ciel1.rotation.set(Math.PI/2,0,0);
+		var ciel2 = new THREE.Mesh( geometry, material2 );
+		ciel2.position.set(0,-100,100);
+		ciel2.rotation.set(-Math.PI/2,0,0);
+		var ciel3 = new THREE.Mesh( geometry, material2 );
+		ciel3.position.set(100,0,100);
+		ciel3.rotation.set(0,-Math.PI/2,0);
+		var ciel4 = new THREE.Mesh( geometry, material2 );
+		ciel4.position.set(-100,0,100);
+		ciel4.rotation.set(0,Math.PI/2,0);
+		var ciel5 = new THREE.Mesh( geometry, material2 );
+		ciel5.position.set(0,0,200);
+		ciel5.rotation.set(Math.PI,0,0);
+		_scene.add( sol );
+		_scene.add( ciel1 );
+		_scene.add( ciel2 );
+		_scene.add( ciel3 );
+		_scene.add( ciel4 );
+		_scene.add( ciel5 );
+	}
+	 
     /**
 	 * Généère un cube unitaire  à la position donnée
      * @param x
@@ -284,14 +359,14 @@ var MyGL = function () {
 	return self;
 };
 
-/*
+
 
 //---------------------------------------------------------------------------------------
 //	Examples
 //---------------------------------------------------------------------------------------
-
+/*
 var mygl = (new MyGL);  
-mygl.initGL(); 
+mygl.initGL("GLDiv");
 mygl.animate();
 
 
@@ -308,5 +383,4 @@ mygl.removeFromScene(cube);
 setTimeout(function () {
 	//mygl.clearScene();
 }, 5000);
-
 */
