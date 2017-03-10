@@ -13,7 +13,7 @@ angular.module('webimClientApp')
         this.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
-            'Karma'
+            'Karma',
         ];
 
         /**
@@ -38,7 +38,8 @@ angular.module('webimClientApp')
             //initialisation de la scène
             mygl.initGL("GLDiv");
             mygl.animate();
-
+			
+			
             //Exemple d'utilisation 1  : charger un fichier et afficher la reponse du serveur dans la console
 
             api.ifc.load(
@@ -64,11 +65,13 @@ angular.module('webimClientApp')
                     var loaderB = new THREE.OBJLoader();
                     loaderB.setMaterials(material);
                     var obj = loaderB.parse(serverResponse.obj);
-
                     //ajout de l'objet sur la scène
+					//obj.rotation.x =- Math.PI / 2;
+					//obj.rotation.y = 90;
+					//obj.rotation.z=Math.PI/2;
                     mygl.clearScene();
                     mygl.addOnScene(obj);
-
+					
                     //on fait pointer la camera sur l'objet
                     mygl.cameraOn(obj);
                 }
@@ -94,5 +97,12 @@ angular.module('webimClientApp')
         $scope.PartsItemOnClick = function () {
             // TODO
         };
+		
+		$scope.handleKeyDown = function(event) {
+				alert('plop');
+		}
+		
 
     });
+	
+
