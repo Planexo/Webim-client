@@ -8,7 +8,7 @@
  * Controller of the webimClientApp
  */
 angular.module('webimClientApp')
-  .controller('AboutCtrl', function () {
+  .controller('ContactCtrl', function () {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
