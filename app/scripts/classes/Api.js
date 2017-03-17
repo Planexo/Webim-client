@@ -110,7 +110,7 @@ var Api = function(Config){
          */
 		ifc.parts = function (filename, success, failure, final) {
 			var localbaseurl = baseurl+'parts/';
-
+			alert(localbaseurl+filename);
 			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction);
 		};
 
@@ -143,32 +143,6 @@ var Api = function(Config){
 		return ifc;
 	})();
 
-	/*------------------------------------------------------------------------
-		Collection mtl/
-	/------------------------------------------------------------------------*/
-
-	self.mtl = (function () {
-		var mtl = {};
-
-		// TODO
-        // Définir les routes et les implémenter
-
-		return mtl;
-	})();
-
-	/*------------------------------------------------------------------------
-		Collection obj/
-	/------------------------------------------------------------------------*/
-
-	self.obj = (function () {
-		var obj = {};
-
-        // TODO
-        // Définir les routes et les implémenter
-
-
-        return obj;
-	})();
 
 	return self;
 };

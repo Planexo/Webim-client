@@ -8,55 +8,72 @@
 var part = function () {
 	var self = {};
 	
-	var isCharged;
-	var obj;
+	var isCharged = false;
+	var obj = null;
 	var minX, minY, minZ, maxX, maxY, maxZ;
+	var name;
 	
-	self.setBounds( _minX, _minY, _minZ, _maxX, _maxY, _maxZ ) {
+	self.getCharged = function () {
+		return isCharged;
+	}
+	
+	self.setCharged = function (value) {
+		obj = value;
+	}
+	
+	self.getObj = function () {
+		return obj;
+	}
+	
+	self.setObj = function (value) {
+		obj = value;
+	}
+	
+	self.getName = function () {
+		return name;
+	}
+	
+	self.setName = function (value) {
+		name = value;
+	}
+	
+	self.setBounds = function ( _minX, _minY, _minZ, _maxX, _maxY, _maxZ ) {
 		minX = _minX;
 		minY = _minY;
 		minZ = _minZ;
 		maxX = _maxX;
 		maxY = _maxY;
 		maxZ = _maxZ;
-	}
+	};
 	
-	self.isXInside( x ) {
+	self.setCharged
+	
+	self.setObj = function ( _obj ) {
+		obj = _obj;
+	};
+	
+	self.isXInside= function ( x ) {
 		return x> minX && x<maxX;
-	}
+	};
 	
-	self.isYInside( y ) {
+	self.isYInside= function ( y ) {
 		return y> minY && y<maxY;
-	}
+	};
 	
-	self.isZInside( z ) {
+	self.isZInside= function ( z ) {
 		return z > minZ && z < maxZ;
-	}
+	};
 	
-	self.distance( x, y, z ) { // returns the distance to the closest point of the cube
-		if ( ( isXInside(x) && isYInside(y) ) || ( isYInside(y) && isZInside(z) ) || ( isZInside(z) && isXInside(x) ) {
-			if ( x < minX ) 
-				return minX - x;
-			if ( x > maxX ) 
-				return x - maxX;
-			if ( y < minY ) 
-				return minY - y;
-			if ( y > maxY ) 
-				return y - maxY;
-			if ( z < minZ ) 
-				return minZ - z;
-			if ( z > maxZ ) 
-				return z - maxZ;
-		} else if ( isXInside(x) || isYInside(y) || isZInside(z) ) {
-			if( isXInside(x) ) {
-				
-			}
-		}
-	}
+	self.distance= function ( x, y, z ) { // returns the distance to the closest point of the cube
+		var dx = Math.max( minX - x, 0, x - maxX);
+		var dy = Math.max( minY - y, 0, y - maxY);
+		var dz = Math.max( minZ - z, 0, z - maxZ);
+		return Math.sqrt(dx*dx+dy*dy+dz*dz);
+	};
 	
 	self.isInside = function ( x, y, z) {
-		return x > minX && x < maxX && y >minY && y < maxY && z > minZ && z < maxZ;
-	}
+		return self.distance(x,y,z) === 0;
+	};
 	
 	self.parsemtl = function(mtl) {
 		var objects = mtl.split("\nnewmtl ");

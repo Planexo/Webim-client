@@ -26,15 +26,15 @@ angular.module('webimClientApp')
          * L'objet qui permet d'effectuer des requêtes sur l'API
          * @type {Api}
          */
-        var api = null;
+        var objManager = null;
 
         /**
          * Fonction d'initilisation appelée au chargement de la vue 'View'
          */
         $scope.init = function () {
             mygl = new MyGL();
-            api = new Api(Config);
-
+            //api = new Api(Config);
+			objManager = new ObjManager(mygl);
             //initialisation de la scène
             mygl.initGL("GLDiv");
             mygl.animate();
@@ -42,7 +42,7 @@ angular.module('webimClientApp')
 			
             //Exemple d'utilisation 1  : charger un fichier et afficher la reponse du serveur dans la console
 
-            api.ifc.load(
+           /* api.ifc.load(
                 '1.ifc',
                 function (serverResponse) {
                     console.log(serverResponse);
@@ -55,7 +55,8 @@ angular.module('webimClientApp')
                 '1.ifc',
                 function (serverResponse) {
                     // Pour connaitre le contenu de 'serverResponse', consulter PostMan (Lien dans Api.js) ou le controlleur adéquat coté serveur
-
+					alert(serverResponse.responseText);
+					console.log(serverResponse);
                     //récupération du matériel dans serverResponse.mtl
                     var mtlLoader = new THREE.MTLLoader()
                     var material = mtlLoader.parse(serverResponse.mtl);
@@ -75,7 +76,7 @@ angular.module('webimClientApp')
                     //on fait pointer la camera sur l'objet
                     mygl.cameraOn(obj);
                 }
-            );
+            );*/
 
         };
 
