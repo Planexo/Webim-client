@@ -19,16 +19,15 @@ var ObjManager = function (_myGL) {
 		tailleBoite = max( part.maxX - part.minX, part.maxY - part.minY, part.maxZ - part.minZ);
 	};
 	
-	self.parsemtl = function(mtl) {
+	/*self.parsemtl = function(mtl) {
 		var objects = mtl.split("\nnewmtl ");
-	};
+	};*/
 	
-	self.parseBoxes = function( str ) {
-		var tab = str.split("/");
-		for ( var i =0; i < tab.length / 7; i++ ) {
+	self.parseBoxes = function( obj ) {
+		for ( var i =0; i < obj.parts.length / 7; i++ ) {
 			var part = new Part();
-			part.setName( tab[ 7 * i ] );
-			part.setBounds ( tab[ 7 * i +1 ],tab[ 7 * i+3 ],tab[ 7 * i +5],tab[ 7 * i +2],tab[ 7 * i +4],tab[ 7 * i +6]);
+			part.setName( obj.parts[i].filename );
+			part.setBounds (obj.parts[i].bounds.x[0],obj.parts[i].bounds.y[0],obj.parts[i].bounds.z[0],obj.parts[i].bounds.x[1],obj.parts[i].bounds.y[1],obj.parts[i].bounds.z[1];
 			parts.push(part);
 		}
 	};
@@ -37,6 +36,17 @@ var ObjManager = function (_myGL) {
 		parts.splice(0,parts.length);
 	};
 	
+
+	self.loadInformations = function( ifc_name ) {
+		api.ifc.mtl(
+		   ifc_name,
+           function (serverResponse) {
+					self.parseBoxes(serverResponse.objets);
+					mtl = serverResponse.mtl;
+                }
+            );
+
+	};
 	
 	self.checkProximity = function( x, y, z) { // Vérifie la distance avec chacunes des parties des non chargées, et si elle est trop proche on les charges et relance l'affichage
 		var ok = false;
