@@ -15,27 +15,27 @@ var part = function () {
 	
 	self.getCharged = function () {
 		return isCharged;
-	}
+	};
 	
 	self.setCharged = function (value) {
 		obj = value;
-	}
+	};
 	
 	self.getObj = function () {
 		return obj;
-	}
+	};
 	
 	self.setObj = function (value) {
 		obj = value;
-	}
+	};
 	
 	self.getName = function () {
 		return name;
-	}
+	};
 	
 	self.setName = function (value) {
 		name = value;
-	}
+	};
 	
 	self.setBounds = function ( _minX, _minY, _minZ, _maxX, _maxY, _maxZ ) {
 		minX = _minX;
@@ -45,8 +45,14 @@ var part = function () {
 		maxY = _maxY;
 		maxZ = _maxZ;
 	};
+
+	self.moyenneTaille = function() {
+		return ( maxX - minX + maxY - minY + maxZ - minZ)/3.0;
+	}
 	
-	self.setCharged
+	self.setCharged = function ( _charged ) {
+		isCharged = _charged;
+	};
 	
 	self.setObj = function ( _obj ) {
 		obj = _obj;
@@ -78,4 +84,5 @@ var part = function () {
 	self.parsemtl = function(mtl) {
 		var objects = mtl.split("\nnewmtl ");
 	};
+	return self;
 };

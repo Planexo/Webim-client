@@ -33,13 +33,13 @@ angular.module('webimClientApp')
          */
         $scope.init = function () {
             mygl = new MyGL();
-            //api = new Api(Config);
 			objManager = new ObjManager(mygl);
             //initialisation de la scène
             mygl.initGL("GLDiv");
             mygl.animate();
 			
-			
+			objManager.InitialisationIFC( '1.ifc', 0,0,0 );
+			//alert('end');
             //Exemple d'utilisation 1  : charger un fichier et afficher la reponse du serveur dans la console
 
            /* api.ifc.load(
@@ -99,9 +99,9 @@ angular.module('webimClientApp')
             // TODO
         };
 		
-		$scope.handleKeyDown = function(event) {
+		/*$scope.handleKeyDown = function(event) {
 				alert('plop');
-		}
+		};*/
 		
 
     });
