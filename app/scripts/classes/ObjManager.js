@@ -64,7 +64,6 @@ var ObjManager = function (_myGL) {
 	};
 	
 	self.checkProximity = function( x, y, z) { // Vérifie la distance avec chacunes des parties des non chargées, et si elle est trop proche on les charges et relance l'affichage
-		alert('plop');
 		if ( isDivised ) {
 			var ok = false;
 			parts.forEach( function(element) {
