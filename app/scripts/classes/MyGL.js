@@ -12,6 +12,7 @@ var MyGL = function () {
     var headerSize = 70;
     var rightMenuRatio = 245;
     var clearcolor = 0;//0xeeeeee;
+    self.objManager;
 
     /**
 	 * Gestion de la camÃ©ra
@@ -274,6 +275,8 @@ var MyGL = function () {
                 alert("Key pressed was not valid !");
                 break;
         }
+
+        self.objManager.checkProximity(_posCam.x, _posCam.y, _posCam.z);
     };
 
 
