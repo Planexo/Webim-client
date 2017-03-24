@@ -40,12 +40,10 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "updatePrecommitMessage":"chmod +x bin/updatePrecommitMessage.sh; bin/updatePrecommitMessage.sh",
     "test": "karma start test/karma.conf.js"
   },
   "dependencies": {},
   "pre-commit":[
-    "updatePrecommitMessage",
     "test"
   ]
 }
