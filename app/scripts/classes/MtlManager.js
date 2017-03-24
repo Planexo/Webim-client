@@ -17,6 +17,7 @@ var MtlManager = function () {
 	*/
 	self.setString = function(_mtlstring) {
 		mtlstring = _mtlstring;
+		self.parse();
 	}
 
 	self.parse = function(){
@@ -294,11 +295,36 @@ var MtlManager = function () {
 	* @param id: id du matériau
 	* @param visible: transparence (0<=visibility<=1)
 	*/
-	self.setMaterialVisibility =  function(id, visiblity) {
-		if(mtlobject.material[id] != null && visiblity >= 0 && visiblity <= 1) {
-			mtlobject.material[id].dissolve.factor = visiblity;
+	self.setMaterialVisibility =  function(id, visibility) {
+		if(mtlobject.material[id] != null && visibility >= 0 && visibility <= 1) {
+			if(mtlobject.material[id].dissolve == undefined) {
+				mtlobject.material[id].dissolve = { type: "background", factor: visibility };
+			} else {
+				mtlobject.material[id].dissolve.factor = visibility;
+			}
 		} else {
-			console.log("Invalid parameters")
+			console.log("Invalid parameters");
+		}
+	};
+
+	/**
+	*
+	* @param id: id du matériau
+	* @param visible: transparence (0<=visibility<=1)
+	*/
+	self.setMaterialColor =  function(id, color) {
+		if(mtlobject.material[id] != null && color.length == 3) {
+			if(color[0] >= 0 && color[0] <= 1 && color[1] >= 0 && color[1] <= 1 && color[2] >= 0 && color[2] <= 1) {
+				if(mtlobject.material[id].diffuse == undefined) {
+					mtlobject.material[id].diffuse = { type: "rgb", vals: color};
+				} else {
+					mtlobject.material[id].diffuse.vals = color;
+				}
+			} else {
+				console.log("Invalid colors");
+			}
+		} else {
+			console.log("Invalid parameters");
 		}
 	};
 

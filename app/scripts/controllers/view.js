@@ -40,7 +40,7 @@ angular.module('webimClientApp')
 
             mygl.objManager = objManager;
 			
-			objManager.InitialisationIFC( '1.ifc', 0,0,0 );
+			objManager.InitialisationIFC( '1.ifc');
 			objManager.checkProximity(0,0,0);
 			//alert('end');
             //Exemple d'utilisation 1  : charger un fichier et afficher la reponse du serveur dans la console
