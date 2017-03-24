@@ -1,21 +1,19 @@
 'use strict';
 /**
- * MyGL
- * Cet objet gère la scène et les objets qui s'y trouvent.
+ * MtlManager
+ * Cet objet gère les fichiers mtl.
  * @returns {{}}
  * @constructor
  */
 var MtlManager = function () {
 
 	var self = {};
-	var fs = require("fs");
-	var util = require("util");
 	var mtlstring;
 	var mtlobject;
 
 	/**
 	*
-	* @param mtl: string du fichier mtl
+	* @param _mtlstring: fichier mtl sous forme de string
 	*/
 	self.setString = function(_mtlstring) {
 		mtlstring = _mtlstring;
@@ -24,7 +22,6 @@ var MtlManager = function () {
 	self.parse = function(){
 		console.log("Parse Started...");
 		var err = null;
-		var data = null;
 		var num_lines = 0;
 		var lines = [];
 
@@ -40,7 +37,7 @@ var MtlManager = function () {
 			num_lines = lines.length;
 			
 			if(num_lines > 0){
-				data = {};
+				mtlobject = {};
 				var obj = null;
 				var line = null;
 				var c_type = null; // current type
@@ -52,8 +49,8 @@ var MtlManager = function () {
 
 					if(line == undefined || line == '' || line == null){
 						if(i == last_line && obj != null){
-							if(!data.material){ data.material = []; }
-							data.material.push(obj);
+							if(!mtlobject.material){ mtlobject.material = []; }
+							mtlobject.material.push(obj);
 						}
 
 						continue;
@@ -61,9 +58,9 @@ var MtlManager = function () {
 
 					if(line.charAt(0) == "#"){
 						if(isHeader){
-							if(!data.header){data.header = [];}
+							if(!mtlobject.header){mtlobject.header = [];}
 
-							data.header.push(line);
+							mtlobject.header.push(line);
 						}
 						else if(opts.parseComments == true){
 							if(obj == null){obj = {};}
@@ -86,8 +83,8 @@ var MtlManager = function () {
 						case 'newmtl': // Material name
 							// newmtl are the start of a new material object
 							if(obj != null){
-								if(!data.material){ data.material = []; }
-								data.material.push(obj);
+								if(!mtlobject.material){ mtlobject.material = []; }
+								mtlobject.material.push(obj);
 								obj = {};
 							}
 							else{
@@ -213,6 +210,11 @@ var MtlManager = function () {
 							console.log("Unprocessed Line: (#" + i + ") " + lines[i]);
 					}
 				}
+				if(obj != null){
+					if(!mtlobject.material){ mtlobject.material = []; }
+					mtlobject.material.push(obj);
+					obj = {};
+				}
 			}
 			else{
 				err = "Error: Can not split file data into lines.";
@@ -227,11 +229,77 @@ var MtlManager = function () {
 			console.log(err);
 		}
 
-		return {err: err, data: data};
+		return {err: err, data: mtlobject};
 	}
 
-	self.generate = function (tab) {
+	self.generate = function () {
+		var text = "";
+		mtlobject.header.forEach(function(element) {
+			text += element;
+			text += "\r\n";
+		});
+		//text += "\r\n";
+		mtlobject.material.forEach(function(element) {
+			text += "newmtl ";
+			text += element.name;
+			//text += "\r\n";
+			Object.keys(element).forEach(function(key, index) {
+				switch(key) {
+					case "diffuse":
+						text += "Kd ";
+						text += element.diffuse.vals[0];
+						text += " ";
+						text += element.diffuse.vals[1];
+						text += " ";
+						text += element.diffuse.vals[2];
+						break;
+					case "ambient":
+						text += "Ka ";
+						text += element.ambient.vals[0];
+						text += " ";
+						text += element.ambient.vals[1];
+						text += " ";
+						text += element.ambient.vals[2];
+						break;
+					case "specular":
+						text += "Ks ";
+						text += element.specular.vals[0];
+						text += " ";
+						text += element.specular.vals[1];
+						text += " ";
+						text += element.specular.vals[2];
+						break;
+					case "specular_exp":
+						text += "Ns ";
+						text += element.specular_exp;
+						break;
+					case "dissolve":
+						text += "Tr ";
+						text += element.dissolve.factor;
+						text += "\r\nd ";
+						text += element.dissolve.factor;
+						text += "\r\nD ";
+						text += element.dissolve.factor;
+						break;
+				}
+				text += "\r\n";
+			});
 
+		});
+		return text;
+	};
+
+	/**
+	*
+	* @param id: id du matériau
+	* @param visible: transparence (0<=visibility<=1)
+	*/
+	self.setMaterialVisibility =  function(id, visiblity) {
+		if(mtlobject.material[id] != null && visiblity >= 0 && visiblity <= 1) {
+			mtlobject.material[id].dissolve.factor = visiblity;
+		} else {
+			console.log("Invalid parameters")
+		}
 	};
 
 	var parseMap = function(line){
