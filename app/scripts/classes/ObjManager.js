@@ -15,7 +15,7 @@ var ObjManager = function (_myGL) {
 	var tailleBoiteMoyenne; // taille moyenne des boites
 	var seuilChargement; // Distance en dessous de laquelle on charge l'obj vers lequel on marche
 	var parts = new Array(); // Array qui contient la liste des parties composant l'obj
-	var mtl;
+	var mtl ;
 	var isDivised = false; // Variable qui va indiquer si l'obj est fournis en tant que pièces détachées ou complet
 	var obj; // Variable qui va stocker l'obj si celui n'a pas été divisé au chargement
 	var numberToLoad = 1; // Nombre de parties adjacentes à afficher
