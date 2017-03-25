@@ -15,7 +15,7 @@ var ObjManager = function (_myGL) {
 	var tailleBoiteMoyenne; // taille moyenne des boites
 	var seuilChargement; // Distance en dessous de laquelle on charge l'obj vers lequel on marche
 	var parts = new Array(); // Array qui contient la liste des parties composant l'obj
-	var mtl ;
+	var mtlManager = new MtlManager();
 	var isDivised = false; // Variable qui va indiquer si l'obj est fournis en tant que pièces détachées ou complet
 	var obj; // Variable qui va stocker l'obj si celui n'a pas été divisé au chargement
 	var numberToLoad = 1; // Nombre de parties adjacentes à afficher
@@ -47,7 +47,7 @@ var ObjManager = function (_myGL) {
 					}else {
 						loadObjTotal();
 					}
-					mtl = serverResponse.mtl;
+					mtlManager.setString(serverResponse.mtl);
            },
            fail() // Version debug en attendant que les routes sont MAJ par le back-end, chargement l'obj selon les anciennes routes ( au 22/03/2017 )
          );
@@ -109,7 +109,7 @@ var ObjManager = function (_myGL) {
         	parts.forEach( function(element) { // On affiche un à un toutes les parties chargées ( ie dont l'obj est en mémoire )
 				if ( element.getCharged() == true ) {
 	                var mtlLoader = new THREE.MTLLoader();
-	                var material = mtlLoader.parse(mtl);
+	                var material = mtlLoader.parse(mtlManager.generate());
 	                material.preload();
 
 	                //récupération de l'objet serverResponse.obj
@@ -122,7 +122,7 @@ var ObjManager = function (_myGL) {
 
         }else { // Si l'ifc n'a pas été divisé, on charge l'obj total avec le mtl
         	var mtlLoader = new THREE.MTLLoader();
-	        var material = mtlLoader.parse(mtl);
+	        var material = mtlLoader.parse(mtlManager.generate());
 	        material.preload();
 	        var loaderB = new THREE.OBJLoader();
 	        loaderB.setMaterials(material);
@@ -132,7 +132,7 @@ var ObjManager = function (_myGL) {
 		
 	};
 	
-	self.InitialisationIFC = function ( _nomIFC, x, y, z ) { // Fonction à appeler à l'initialisation de la page. Va regarder si l'ifc est divisé ou non, charger le mtl et les informations des partie, ou l'obj total le cas échéant
+	self.InitialisationIFC = function ( _nomIFC) { // Fonction à appeler à l'initialisation de la page. Va regarder si l'ifc est divisé ou non, charger le mtl et les informations des partie, ou l'obj total le cas échéant
 		nomFichier = _nomIFC;
 
 		var fail = function () { // Fonction pour que cela marche même tant que les routes ne sont pas mis à jour par la partie back-end ( 22/03/2017)
@@ -143,17 +143,22 @@ var ObjManager = function (_myGL) {
                 function (serverResponse) {
                 	//alert('uesh');
                     //récupération du matériel dans serverResponse.mtl
-                    mtl = serverResponse.mtl;
+                    mtlManager.setString(serverResponse.mtl);
+                    console.log(mtlManager.parse());
                     //alert(mtl);
 
                     //récupération de l'objet serverResponse.obj
                     obj = serverResponse.obj;
+
+					mtlManager.setMaterialColor(0, [1,0,0]);
+					console.log(mtlManager.generate());
                     ReloadScene();
                 }
             );
 		};
 		//alert('infos');
 		loadInformations( fail ); // On va chercher les informations relatives à cet ifc.
+
 
 
 	};
