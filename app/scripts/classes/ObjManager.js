@@ -112,12 +112,27 @@ var ObjManager = function (_myGL, table) {
         );
 	};
 
+	function hexToRgb(hex) {
+	    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	    return result ? {
+	        r: parseInt(result[1], 16),
+	        g: parseInt(result[2], 16),
+	        b: parseInt(result[3], 16)
+	    } : null;
+	}
+
 	self.setMaterialVisibility = function (id, value) {
 		mtlManager.setMaterialVisibility(id, value);
 		ReloadScene();
 	};
 	self.setMaterialColor = function (id, value) {
-		mtlManager.setMaterialVisibility(id, value);
+		var colorh = hexToRgb(value);
+		var color = [];
+		color[0] = colorh['r']/255.0;
+		color[1] = colorh['g']/255.0;
+		color[2] = colorh['b']/255.0;
+
+		mtlManager.setMaterialColor(id, color);
 		ReloadScene();
 	};
 	

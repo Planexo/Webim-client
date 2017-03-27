@@ -149,7 +149,8 @@ angular.module('webimClientApp')
         };
 
         $scope.UpdateColor = function(id) {
-        	console.log($scope.opacity[id]);
+        	objManager.setMaterialColor(id,$scope.colors[id]);
+        	console.log($scope.colors[id]);
         };
         /**
          * Exemple :
