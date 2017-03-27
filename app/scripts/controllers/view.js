@@ -16,6 +16,9 @@ angular.module('webimClientApp')
             'Karma',
         ];
 
+        $scope.colors = [];
+       	$scope.opacity = []
+
         /**
          * L'objet qui permet d'intéragir avec la scène
          * @type {MyGL}
@@ -28,10 +31,7 @@ angular.module('webimClientApp')
          */
         var objManager = null;
 
-        /**
-         * Fonction d'initilisation appelée au chargement de la vue 'View'
-         */
-         var generateSidebar = function(mtlManager, table) {
+        var generateSidebar = function(mtlManager, table) {
 
 			for ( var i=0; i<mtlManager.mtlobject.material.length; i++) {
 				var ligne = table.insertRow(-1);
@@ -40,14 +40,22 @@ angular.module('webimClientApp')
 				var range = ligne.insertCell(2);
 				var color = ligne.insertCell(3);
 
-				var nominnerHTML = mtlManager.mtlobject.material[i].name;
+				nom.innerHTML = mtlManager.mtlobject.material[i].name;
+				//angular.element(nom).append( $compile(nominnerHTML)($scope) );
 				var hideShowinnerHTML = '<button class="hideShow" ng-click="hideShow('+i+')">Montrer/Cacher</button>';
-				angular.element(hideShow).append( $compile(hideShowinnerHTML)($scope) )
-				var rangeinnerHTML = '<input type="range" ng-change="UpdateOpacity('+i+',this.value)" value="100" max="100" min="0"/>';
-				var colorinnerHTML = '<input type="color" ng-change="UpdateColor('+i+',this.value)" />';
+				angular.element(hideShow).append( $compile(hideShowinnerHTML)($scope) );
+				var rangeinnerHTML = '<input type="range" ng-model="opacity['+i+']" ng-change="UpdateOpacity('+i+')"  max="100" min="0" value="100"/>';
+				angular.element(range).append( $compile(rangeinnerHTML)($scope) );
+				var colorinnerHTML = '<input type="color" ng-model="colors['+i+']" ng-change="UpdateColor('+i+')" />';
+				angular.element(color).append( $compile(colorinnerHTML)($scope) );
 
 			};
 		};
+
+
+        /**
+         * Fonction d'initilisation appelée au chargement de la vue 'View'
+         */
 
         $scope.init = function () {
         	var table = document.getElementById("mtl_table");
@@ -64,8 +72,11 @@ angular.module('webimClientApp')
 			objManager.InitialisationIFC( '1.ifc');
 
 			objManager.checkProximity(0,0,0);
-			console.log(objManager.mtlManager);
-			generateSidebar(objManager.mtlManager, table);
+
+
+
+			//generateSidebar(objManager.mtlManager, document.getElementById("mtl_table"));
+
 			//alert('end');
             //Exemple d'utilisation 1  : charger un fichier et afficher la reponse du serveur dans la console
 
@@ -113,14 +124,33 @@ angular.module('webimClientApp')
          * Exemple
          * @constructor
          */
-       $scope.hideShow = function(id) {
-       		alert('plop');
+
+
+
+
+       $scope.generationTable = function () {
+			//alert('plop');
+			generateSidebar(objManager.mtlManager, document.getElementById("mtl_table"));
        };
 
         $scope.ObjOnClick = function () {
             // TODO
         };
 
+
+       $scope.hideShow = function(id) {
+       		objManager.hideShowElement(id);
+       };
+
+        $scope.UpdateOpacity = function(id) {
+        	objManager.setMaterialVisibility(id,$scope.opacity[id]/100.0);
+        	console.log($scope.opacity[id]);
+       		//alert($scope.opacity[id]);
+        };
+
+        $scope.UpdateColor = function(id) {
+        	console.log($scope.opacity[id]);
+        };
         /**
          * Exemple :
          * clic sur un item de la liste des parties du fichier ifc

@@ -19,7 +19,7 @@ var MtlManager = function () {
 		self.parse();
 	};
 
-	self.generateSidebar = function(table) {
+	/*self.generateSidebar = function(table) {
 
 		for ( var i=0; i<mtlobject.material.length; i++) {
 			var ligne = table.insertRow(-1);
@@ -35,8 +35,8 @@ var MtlManager = function () {
 			var colorinnerHTML = '<input type="color" ng-change="UpdateColor('+i+',this.value)" />';
 
 		};
-		return content;
-	};
+		return content;*
+	};*/
 
 	self.parse = function(){
 		console.log("Parse Started...");
@@ -333,6 +333,7 @@ var MtlManager = function () {
 	* @param visible: transparence (0<=visibility<=1)
 	*/
 	self.setMaterialColor =  function(id, color) {
+
 		if(mtlobject.material[id] != null && color.length == 3) {
 			if(color[0] >= 0 && color[0] <= 1 && color[1] >= 0 && color[1] <= 1 && color[2] >= 0 && color[2] <= 1) {
 				if(mtlobject.material[id].diffuse == undefined) {

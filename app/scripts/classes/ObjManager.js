@@ -39,6 +39,7 @@ var ObjManager = function (_myGL, table) {
 	var ClearParts = function () {
 		parts.splice(0,parts.length);
 	};
+
 	
 	var loadInformations = function( fail ) { // Charge les informations relative au partitionnage de l'obj
 		api.ifc.infos(
@@ -59,6 +60,7 @@ var ObjManager = function (_myGL, table) {
 
 	var setMtl = function(mtl_resp) {
 		mtlManager.setString(mtl_resp);
+		document.getElementById("buttonCharge").click();
 		//alert('charged');
 		//mtlManager.generateSidebar(table);
 	};
@@ -109,7 +111,27 @@ var ObjManager = function (_myGL, table) {
            }
         );
 	};
+
+	self.setMaterialVisibility = function (id, value) {
+		mtlManager.setMaterialVisibility(id, value);
+		ReloadScene();
+	};
+	self.setMaterialColor = function (id, value) {
+		mtlManager.setMaterialVisibility(id, value);
+		ReloadScene();
+	};
 	
+	self.hideShowElement= function (id) {
+		if ( mtlManager.mtlobject.material[id].dissolve == null ) {
+			mtlManager.setMaterialVisibility(id, 1);
+		}
+		if ( mtlManager.mtlobject.material[id].dissolve.factor == 0) {
+			self.setMaterialVisibility( id, 1);
+		}else {
+			self.setMaterialVisibility( id, 0);
+		}
+	}
+
 	var ReloadScene = function() { // Fonction à appeler à chaque modification de la scène ( obj(s) ou mtl )
 		
         myGL.clearScene(); // Efface la scène courante

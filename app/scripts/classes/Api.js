@@ -37,16 +37,18 @@ var Api = function(Config){
      * @param failure : Fonction callback en cas d'échec
      * @param final : Fonction callback peu importe le résultat
      */
-	var get = function (url, parameters, success, failure, final) {
+	var get = function (url, parameters, success, failure, final, async) {
 		var jqxhr = $.ajax({
         method:'GET',
         url:URL+url,
-        data:parameters
+        data:parameters,
+        asyn:async
 		  })
 			.done(success)
 			.fail(failure)
 			.always(final);
 	};
+
 
     /**
      * Envoie des données sur le serveur
@@ -111,7 +113,7 @@ var Api = function(Config){
 		ifc.parts = function (filename, success, failure, final) {
 			var localbaseurl = baseurl+'parts/';
             //alert('plop');
-			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction);
+			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction, true);
 		};
 
         /**
@@ -124,7 +126,7 @@ var Api = function(Config){
 		ifc.infos = function (filename, success, failure, final) {
 			var localbaseurl = baseurl+'infos/';
 
-			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction);
+			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction, false);
 		};
 
         /**
@@ -137,7 +139,7 @@ var Api = function(Config){
 		ifc.obj = function (filename, success, failure, final) {
 			var localbaseurl = baseurl+'obj/';
 
-			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction);
+			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction, true);
 		};
 
 		return ifc;
