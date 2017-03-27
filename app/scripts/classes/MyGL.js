@@ -160,7 +160,7 @@ var MyGL = function () {
 
 		_scene.add(spotLight);
 
-		_trackball = new THREE.TrackballControls(_camera);
+		/*_trackball = new THREE.TrackballControls(_camera);
 		_trackball.rotateSpeed = 3.0;
 		_trackball.zoomSpeed = 1.2;
 		_trackball.panSpeed = 0.8;
@@ -173,7 +173,7 @@ var MyGL = function () {
 		_trackball.minDistance = 1;
 		_trackball.maxDistance = 300;
 		_trackball.keys = [82, 90, 80]; // [r:rotate, z:zoom, p:pan]
-		_trackball.addEventListener('change', self.render);
+		_trackball.addEventListener('change', self.render);*/
 		
 		_renderer = new THREE.WebGLRenderer();//{ antialiasing: true }/*{ alpha: true }*/);  //CanvasRenderer();
 		_renderer.setSize(width, height);
@@ -192,7 +192,7 @@ var MyGL = function () {
 	 */
 	self.animate = function () {
 		requestAnimationFrame(self.animate);
-		_trackball.update();
+		//_trackball.update();
 		self.render();
 	};
 

@@ -6,9 +6,10 @@
  * @returns {{}}
  * @constructor
  */
-var ObjManager = function (_myGL) {
+var ObjManager = function (_myGL, table) {
 	var self = {};
 	
+	//var tableau = table; // pointeur vers le tableau dans la page
 	var myGL = _myGL; // pointeur vers le gestionnaire webGL
 	var nomFichier= ""; // nom du ficher ifc
 	var api = new Api(Config); // Instance du gestionnaire de requettes ajax
@@ -22,8 +23,10 @@ var ObjManager = function (_myGL) {
 	
 	self.setNumberToLoad = function ( number ) { 
 		numberToLoad = number;
-	}
-	
+	};
+
+	self.mtlManager = mtlManager;
+
 	var parseBoxes = function( obj ) { // Crée les parties asosciées aux informations reçues et les stockes en mémoire
 		for ( var i =0; i < obj.parts.length / 7; i++ ) {
 			var part = new Part();
@@ -47,12 +50,18 @@ var ObjManager = function (_myGL) {
 					}else {
 						loadObjTotal();
 					}
-					mtlManager.setString(serverResponse.mtl);
+					setMtl(serverResponse.mtl);
+
            },
            fail() // Version debug en attendant que les routes sont MAJ par le back-end, chargement l'obj selon les anciennes routes ( au 22/03/2017 )
          );
 	};
 
+	var setMtl = function(mtl_resp) {
+		mtlManager.setString(mtl_resp);
+		//alert('charged');
+		//mtlManager.generateSidebar(table);
+	};
 
 	var defineProximity = function () { // Définis ce qu'est la proximité dans la scène, ie la distance en dessous de laquelle on se considère proche d'une boite ( seuilChargement )
 		var moy= 0;
@@ -143,7 +152,7 @@ var ObjManager = function (_myGL) {
                 function (serverResponse) {
                 	//alert('uesh');
                     //récupération du matériel dans serverResponse.mtl
-                    mtlManager.setString(serverResponse.mtl);
+                    setMtl(serverResponse.mtl);
                     console.log(mtlManager.parse());
                     //alert(mtl);
 

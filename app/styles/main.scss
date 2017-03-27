@@ -71,6 +71,8 @@ body {
 @media screen and (min-width: 768px) {
 	.container {
 		/*max-width: 730px;*/
+
+		
 	}
 
 	/* Remove the padding we set earlier */
@@ -88,4 +90,7 @@ body {
 	.jumbotron {
 		border-bottom: 0;
 	}
+}
+#mtl_table {
+			float: left;
 }

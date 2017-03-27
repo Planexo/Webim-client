@@ -1,7 +1,8 @@
+<table id="mtl_table"></table>
 <div class="container" ng-init="init()">
-	
 	<div id="GLDiv"></div>
 </div>
+<table id="mtl_table" class="ng-scope"><tbody><tr><td>IfcWall</td><td><button class="hideShow" ng-click="hideShow(0)">Montrer/Cacher</button></td><td><input type="range" ng-change="UpdateOpacity(0,this.value)" value="100" max="100" min="0"></td><td><input type="color" ng-change="UpdateColor(0,this.value)"></td></tr><tr><td>IfcWindow</td><td><button class="hideShow" ng-click="hideShow(1)">Montrer/Cacher</button></td><td><input type="range" ng-change="UpdateOpacity(1,this.value)" value="100" max="100" min="0"></td><td><input type="color" ng-change="UpdateColor(1,this.value)"></td></tr><tr><td>IfcDoor</td><td><button class="hideShow" ng-click="hideShow(2)">Montrer/Cacher</button></td><td><input type="range" ng-change="UpdateOpacity(2,this.value)" value="100" max="100" min="0"></td><td><input type="color" ng-change="UpdateColor(2,this.value)"></td></tr><tr><td>IfcSlab</td><td><button class="hideShow" ng-click="hideShow(3)">Montrer/Cacher</button></td><td><input type="range" ng-change="UpdateOpacity(3,this.value)" value="100" max="100" min="0"></td><td><input type="color" ng-change="UpdateColor(3,this.value)"></td></tr><tr><td>DefaultMaterial</td><td><button class="hideShow" ng-click="hideShow(4)">Montrer/Cacher</button></td><td><input type="range" ng-change="UpdateOpacity(4,this.value)" value="100" max="100" min="0"></td><td><input type="color" ng-change="UpdateColor(4,this.value)"></td></tr><tr><td>DefaultMaterial</td><td><button class="hideShow" ng-click="hideShow(5)">Montrer/Cacher</button></td><td><input type="range" ng-change="UpdateOpacity(5,this.value)" value="100" max="100" min="0"></td><td><input type="color" ng-change="UpdateColor(5,this.value)"></td></tr></tbody></table>
 <div id="KeyboardHandlerDescription"></div>
 <!--<input type="color" onchange="alert(this.value)"/>-->
 <script type="text/javascript">

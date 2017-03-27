@@ -9,7 +9,7 @@
  * Controller of the webimClientApp
  */
 angular.module('webimClientApp')
-    .controller('ViewCtrl', function ($scope) {
+    .controller('ViewCtrl', function ($scope, $compile) {
         this.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -31,9 +31,30 @@ angular.module('webimClientApp')
         /**
          * Fonction d'initilisation appelée au chargement de la vue 'View'
          */
+         var generateSidebar = function(mtlManager, table) {
+
+			for ( var i=0; i<mtlManager.mtlobject.material.length; i++) {
+				var ligne = table.insertRow(-1);
+				var nom = ligne.insertCell(0);
+				var hideShow = ligne.insertCell(1);
+				var range = ligne.insertCell(2);
+				var color = ligne.insertCell(3);
+
+				var nominnerHTML = mtlManager.mtlobject.material[i].name;
+				var hideShowinnerHTML = '<button class="hideShow" ng-click="hideShow('+i+')">Montrer/Cacher</button>';
+				angular.element(hideShow).append( $compile(hideShowinnerHTML)($scope) )
+				var rangeinnerHTML = '<input type="range" ng-change="UpdateOpacity('+i+',this.value)" value="100" max="100" min="0"/>';
+				var colorinnerHTML = '<input type="color" ng-change="UpdateColor('+i+',this.value)" />';
+
+			};
+		};
+
         $scope.init = function () {
+        	var table = document.getElementById("mtl_table");
+
             mygl = new MyGL();
-			objManager = new ObjManager(mygl);
+			objManager = new ObjManager(mygl, table);
+
             //initialisation de la scène
             mygl.initGL("GLDiv");
             mygl.animate();
@@ -41,7 +62,10 @@ angular.module('webimClientApp')
             mygl.objManager = objManager;
 			
 			objManager.InitialisationIFC( '1.ifc');
+
 			objManager.checkProximity(0,0,0);
+			console.log(objManager.mtlManager);
+			generateSidebar(objManager.mtlManager, table);
 			//alert('end');
             //Exemple d'utilisation 1  : charger un fichier et afficher la reponse du serveur dans la console
 
@@ -89,6 +113,10 @@ angular.module('webimClientApp')
          * Exemple
          * @constructor
          */
+       $scope.hideShow = function(id) {
+       		alert('plop');
+       };
+
         $scope.ObjOnClick = function () {
             // TODO
         };
