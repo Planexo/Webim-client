@@ -38,19 +38,19 @@ var MyGL = function () {
          * @private
          */
 		_renderer;
-        /**
-		 * Gestion de la souris
-         * @private
-         */
+    /**
+     * Gestion de la souris
+     * @private
+     */
     var mouseDown = false;
     var mouseX = 0;
     var mouseY = 0;
-        /**
-		 * Liste des éléments ajoutés à la scène
-         * @type {Array}
-         * @private
-         */
-	var _entities = [];
+    /**
+     * Liste des éléments ajoutés à la scène
+     * @type {Array}
+     * @private
+     */
+    var _entities = [];
 
     //---------------------------------------------------------------------------------------
     //	WebGL
@@ -157,7 +157,7 @@ var MyGL = function () {
         //spotLight.target = cube;
 
         _scene.add(spotLight);
-       
+
         _renderer = new THREE.WebGLRenderer();//{ antialiasing: true }/*{ alpha: true }*/);  //CanvasRenderer();
         _renderer.setSize(width, height);
         _renderer.setClearColor(clearcolor, 1);
@@ -171,13 +171,6 @@ var MyGL = function () {
         window.addEventListener('mousemove', function (e) { onMouseMove(e); }, false);
         window.addEventListener('mousedown', function (e) { onMouseDown(e); }, false);
         window.addEventListener('mouseup', function (e) { onMouseUp(e); }, false);
-
-        /*function addMouseHandler(canvas) {
-            canvas.addEventListener('mousemove', function (e) { onMouseMove(e); }, false);
-            canvas.addEventListener('mousedown', function (e) { onMouseDown(e); }, false);
-            canvas.addEventListener('mouseup', function (e) { onMouseUp(e); }, false);
-        }*/
-
     };
 
     /**
@@ -274,7 +267,7 @@ var MyGL = function () {
     };
 
     function onMouseMove(evt) {
-        
+
         if (!mouseDown) {
             return;
         }
@@ -302,16 +295,15 @@ var MyGL = function () {
         mouseDown = false;
     }
 
-    function rotateScene(deltaX, deltaY) {
-        var _xCam = new THREE.Vector3(1, 0, 0);
-        var _yCam = new THREE.Vector3(0, 1, 0);
+    function rotateScene(deltaX, deltaZ) {
         var _diffCam = new THREE.Vector3();
+
         _diffCam.subVectors(_posCam, _targetCam);
-        _diffCam.applyAxisAngle(_xCam, deltaX/200);
-        _diffCam.applyAxisAngle(_yCam, deltaY/200);
+
+        var deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(deltaZ/200, 0, deltaX/200, 'XYZ'));
+        _diffCam.applyQuaternion(deltaRotationQuaternion);
+
         _targetCam.addVectors(_posCam, _diffCam);
-        //root.rotation.y += deltaX / 100;
-        //root.rotation.x += deltaY / 100;
     }
 
     var addAxes = function () {
