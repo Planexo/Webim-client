@@ -10,11 +10,9 @@ var MtlManager = function () {
 	var self = {};
 	var mtlstring;
 	var mtlobject;
-<<<<<<< HEAD
 	var mtlobject_original;
-=======
 	var button;
->>>>>>> cdcbb360120d1c423491f266be8057552eb2053b
+
 	/**
 	*
 	* @param _mtlstring: fichier mtl sous forme de string
