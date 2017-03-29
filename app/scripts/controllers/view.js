@@ -10,11 +10,7 @@
  */
 angular.module('webimClientApp')
     .controller('ViewCtrl', function ($scope, $compile) {
-        this.awesomeThings = [
-            'HTML5 Boilerplate',
-            'AngularJS',
-            'Karma',
-        ];
+
 
         $scope.colors = [];
        	$scope.opacity = []
@@ -57,8 +53,8 @@ angular.module('webimClientApp')
 
        var generationTable = function (mtlobject) { // Génère le tableau pour modifier le MTL
             generateSidebar(mtlobject, document.getElementById("mtl_table"));
+            mygl.objManager = objManager;
        };
-
         /**
          * Fonction d'initilisation appelée au chargement de la vue 'View'
          */
@@ -74,9 +70,9 @@ angular.module('webimClientApp')
             mygl.initGL("GLDiv");
             mygl.animate();
 
-            mygl.objManager = objManager;
 			
-			objManager.InitialisationIFC( '1.ifc');
+			//objManager.InitialisationIFC( '1.ifc');
+			objManager.InitialisationIFC( 'Paris2010');
 
 			objManager.checkProximity(0,0,0);
 
@@ -94,7 +90,7 @@ angular.module('webimClientApp')
 
         $scope.UpdateOpacity = function(id) {
         	objManager.setMaterialVisibility(id,$scope.opacity[id]/100.0);
-        	console.log($scope.opacity[id]);
+        	//console.log($scope.opacity[id]);
        		//alert($scope.opacity[id]);
         };
 

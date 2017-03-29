@@ -20,6 +20,7 @@ var ObjManager = function (_myGL, table, generationTable) {
 	var isDivised = false; // Variable qui va indiquer si l'obj est fournis en tant que pièces détachées ou complet
 	var obj; // Variable qui va stocker l'obj si celui n'a pas été divisé au chargement
 	var numberToLoad = 1; // Nombre de parties adjacentes à afficher
+	var chemin_fichier;
 	
 	self.setNumberToLoad = function ( number ) { 
 		numberToLoad = number;
@@ -28,12 +29,16 @@ var ObjManager = function (_myGL, table, generationTable) {
 	self.mtlManager = mtlManager;
 
 	var parseBoxes = function( obj ) { // Crée les parties asosciées aux informations reçues et les stockes en mémoire
-		for ( var i =0; i < obj.parts.length / 7; i++ ) {
+		console.log(obj);
+		for ( var i =0; i < obj.parts.length; i++ ) {
 			var part = new Part();
 			part.setName( obj.parts[i].filename );
 			part.setBounds (obj.parts[i].bounds.x[0],obj.parts[i].bounds.y[0],obj.parts[i].bounds.z[0],obj.parts[i].bounds.x[1],obj.parts[i].bounds.y[1],obj.parts[i].bounds.z[1]);
+			//console.log(part);
 			parts.push(part);
+
 		}
+		defineProximity();
 	};
 	
 	var ClearParts = function () {
@@ -46,14 +51,16 @@ var ObjManager = function (_myGL, table, generationTable) {
 		   nomFichier,
            function (serverResponse) { // Si on trouve les informations, on les parse et les mets en mémoire
            		console.log(serverResponse);
-           			if ( serverResponse.objets != null) { // Si l'obj a été divisé
-						parseBoxes(serverResponse.infos);
+					setMtl(serverResponse.mtl);
+           			if ( serverResponse.infos != null) { // Si l'obj a été divisé
+           				isDivised = true;
+           				var infos = JSON.parse(serverResponse.infos);
+           				chemin_fichier = infos.repertoire;
+						parseBoxes(infos);
 						console.log(parts);
-						isDivised = true;
 					}else {
 						loadObjTotal();
 					}
-					setMtl(serverResponse.mtl);
 
            },
            fail() // Version debug en attendant que les routes sont MAJ par le back-end, chargement l'obj selon les anciennes routes ( au 22/03/2017 )
@@ -61,7 +68,7 @@ var ObjManager = function (_myGL, table, generationTable) {
 	};
 
 	var setMtl = function(mtl_resp) {
-		mtlManager.setString(mtl_resp,document.getElementById("buttonCharge") );
+		mtlManager.setString(mtl_resp);
 		//alert('charged');
 		//mtlManager.generateSidebar(table);
 	};
@@ -73,40 +80,52 @@ var ObjManager = function (_myGL, table, generationTable) {
 			moy += element.moyenneTaille();
 		});
 		tailleBoiteMoyenne = moy / parts.length;
-		seuilChargement = tailleBoiteMoyenne / 5.0; // Définie comme étant proche une distance égale au cinquieme de la taille moyenne des boites
+		seuilChargement = tailleBoiteMoyenne / 100.0; // Définie comme étant proche une distance égale au cinquieme de la taille moyenne des boites
+		//alert(tailleBoiteMoyenne);
+		//alert(seuilChargement);
 	};
 	
 	self.checkProximity = function( x, y, z) { // Vérifie la distance avec chacunes des parties des non chargées, et si elle est trop proche on les charges et relance l'affichage
+
+		//alert('hello');
 		if ( isDivised ) {
 			var ok = false;
-			parts.forEach( function(element) {
-				if ( element.getCharged() == false ) { // Si l'obj n'a pas déjà été chargé, on vérifie si il faut le charger ou non
+			parts.forEach( function(element, index) {
+				//alert('hello');
+				if ( element.getCharged() == false && element.getCharging() == false ) { // Si l'obj n'a pas déjà été chargé, on vérifie si il faut le charger ou non
+					//alert('plop');
 					if ( element.distance(x,y,z) <= ( seuilChargement + (numberToLoad-1) * tailleBoiteMoyenne  ) ) { // Charge les parties les plus proches, mais aussi celles qui sont adjacentes si on veut en afficher plus d'un coup
-						loadObjPart( part );
-						ok = true;
+						loadObjPart( index );
 					}
 				}			
 			});
 			
-			if ( ok ) { // Si on a chargé de nouveaux obj on recharge la scène
-				ReloadScene();
-			}
 		}
 		
 	};
 	
-	var loadObjPart = function( part ) { // charge l'OBJ demandé et le charge dans la partie associée
+	var loadObjPart = function( part_id ) { // charge l'OBJ demandé et le charge dans la partie associée
 		api.ifc.parts(
-		   part.getName(),
+		   '/obj/' + nomFichier + '.obj/part/' +  part_id,
            function (serverResponse) {
-					part.setObj(serverResponse.obj);
+           			//console.log(parts[part_id].getCharged());
+           			//console.log(parts[part_id]);
+					parts[part_id].Obj(serverResponse.content);
+           			//alert('before');
+           			//console.log(serverResponse);
+           			//alert(parts[part_id].getCharged());
+           			//console.log(serverResponse.content);
+					//alert('after');
+					//console.log(serverResponse);
+					ReloadScene();
            }
         );
 	};
-
+///obj/Paris2010.obj/part/0
 	var loadObjTotal = function () { // Charge l'obj total, ie sans division
+		alert('Objtot');
 		api.ifc.parts(
-		   nomFichier,
+		   '/ifc/parts/' + nomFichier,
            function (serverResponse) {
 					obj = serverResponse.obj;
 					ReloadScene(); // Obligé de le mettre là comme les requette sont asynchrone, il y a un risque qu'il soit appelé avant la fin du chargement si il est mis ailleurs dans le code
@@ -159,21 +178,27 @@ var ObjManager = function (_myGL, table, generationTable) {
         myGL.clearScene(); // Efface la scène courante
     //    alert('reloadScene');
         if ( isDivised == true ) { // Si l'ifc a été divisé
-        	parts.forEach( function(element) { // On affiche un à un toutes les parties chargées ( ie dont l'obj est en mémoire )
-				if ( element.getCharged() == true ) {
-	                var mtlLoader = new THREE.MTLLoader();
-	                var material = mtlLoader.parse(mtlManager.generate());
-	                material.preload();
 
+		   var mtlLoader = new THREE.MTLLoader();
+		   var material = mtlLoader.parse(mtlManager.generate());
+		    material.preload();
+        	parts.forEach( function(element) { // On affiche un à un toutes les parties chargées ( ie dont l'obj est en mémoire )
+
+				if ( element.getCharged() == true ) {
+					//alert('plop');
 	                //récupération de l'objet serverResponse.obj
 	                var loaderB = new THREE.OBJLoader();
 	                loaderB.setMaterials(material);
-	                var obj_partie = loaderB.parse(part.getObj());
+	                var obj_partie = loaderB.parse(element.getObj());	
+	                //obj_partie.rotation.x =- Math.PI / 2;
+					//obj_partie.rotation.y = Math.PI/2;
+					obj_partie.rotation.z=Math.PI/2;
 					myGL.addOnScene(obj_partie);
 				}			
 			});
 
         }else { // Si l'ifc n'a pas été divisé, on charge l'obj total avec le mtl
+					//alert('plop');
         	var mtlLoader = new THREE.MTLLoader();
 	        var material = mtlLoader.parse(mtlManager.generate());
 	        material.preload();

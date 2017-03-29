@@ -61,7 +61,7 @@ var MtlManager = function (generationTable) {
 
 					if(line.charAt(0) == "#"){
 						if(isHeader){
-							if(!mtlobject.header){mtlobject.header = [];}
+							if(!mtlobject.header){mtlobject.header = [];alert('plop');}
 
 							mtlobject.header.push(line);
 						}
@@ -94,7 +94,7 @@ var MtlManager = function (generationTable) {
 								obj = {};
 							}
 
-							console.log("Parsing Materal name (newmtl): " + line[1]);
+							//console.log("Parsing Materal name (newmtl): " + line[1]);
 							obj.name = line[1];
 							isHeader = false;
 							break;
@@ -111,7 +111,7 @@ var MtlManager = function (generationTable) {
 							else if(c_type == "tf") which = "transmission";
 							var s_type = line[1]; // statement type
 							
-							console.log("Parsing " + which + " " + (c_type == "tf" ? "Transmission filter" : "reflectivity") + " (" + c_type + ")...");
+							//console.log("Parsing " + which + " " + (c_type == "tf" ? "Transmission filter" : "reflectivity") + " (" + c_type + ")...");
 							
 							if(obj == null) obj = {};
 							
@@ -143,12 +143,12 @@ var MtlManager = function (generationTable) {
 							
 							break;
 						case 'illum': // Illumination model
-							console.log("Parsing Illumination model (illum)...");
+							//console.log("Parsing Illumination model (illum)...");
 							if(obj == null) obj = {};
 							obj.illumination = parseInt(line[1]);
 							break;
 						case 'd': // Dissolve
-							console.log("Parsing Dissolve (d)...");
+							//console.log("Parsing Dissolve (d)...");
 							if(obj == null) obj = {};
 							obj.dissolve = {};
 							if(line[1] == "-halo"){
@@ -161,17 +161,17 @@ var MtlManager = function (generationTable) {
 							}
 							break;
 						case 'ns': // Specular Exponent
-							console.log("Parsing Specular exponent (Ns)...");
+							//console.log("Parsing Specular exponent (Ns)...");
 							if(obj == null) obj = {};
 							obj.specular_exp = parseInt(line[1]);
 							break;
 						case 'ni': // Optical density
-							console.log("Parsing Optical density (Ni)...");
+							//console.log("Parsing Optical density (Ni)...");
 							if(obj == null) obj = {};
 							obj.optical_density = parseFloat(line[1]);
 							break;
 						case 'sharpness': // Reflection Sharpness
-							console.log("Parsing Sharpness (sharpness)...");
+							//console.log("Parsing Sharpness (sharpness)...");
 							if(obj == null) obj = {};
 							obj.sharpness = parseInt(line[1]);
 							break;
@@ -194,23 +194,23 @@ var MtlManager = function (generationTable) {
 								default:
 									which = c_type;
 							}
-							console.log("Parsing Texutre Map " + which + " (" + c_type + ")...");
+							//console.log("Parsing Texutre Map " + which + " (" + c_type + ")...");
 							if(!obj.texture_map) obj.texture_map = {};
 							obj.texture_map[which] = parseMap(line);
 							break;
 						case 'map_aat':
-							console.log("Parsing Anti-aliasing (map_aat)...");
+							//console.log("Parsing Anti-aliasing (map_aat)...");
 							if(obj == null) obj = {};
 							if(!obj.map) obj.map = {};
 							obj.map.anti_alias = line[1];
 							break;
 						//Reflection Map...
 						case 'refl':
-							console.log("Parsing Reflection Map (refl)...");
+							//console.log("Parsing Reflection Map (refl)...");
 							obj.reflection_map = parseMap(line);
 							break;
 						default:
-							console.log("Unprocessed Line: (#" + i + ") " + lines[i]);
+							//console.log("Unprocessed Line: (#" + i + ") " + lines[i]);
 					}
 				}
 				if(obj != null){
@@ -233,6 +233,7 @@ var MtlManager = function (generationTable) {
 		}
 
 		self.mtlobject_original = mtlobject;
+		self.mtlobject = mtlobject;
 		generationTable(mtlobject);
 		mtlobject = self.mtlobject_original;
 		return {err: err, data: mtlobject};
@@ -240,10 +241,10 @@ var MtlManager = function (generationTable) {
 
 	self.generate = function () {
 		var text = "";
-		mtlobject.header.forEach(function(element) {
+		/*mtlobject.header.forEach(function(element) {
 			text += element;
 			text += "\r\n";
-		});
+		});*/
 		//text += "\r\n";
 		mtlobject.material.forEach(function(element) {
 			text += "newmtl ";

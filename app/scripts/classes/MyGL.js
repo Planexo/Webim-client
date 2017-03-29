@@ -52,7 +52,7 @@ var MyGL = function (canvas) {
      * @private
      */
     var _entities = [];
-
+    self.objManager = null;
     //---------------------------------------------------------------------------------------
     //	WebGL
     //---------------------------------------------------------------------------------------
@@ -152,7 +152,7 @@ var MyGL = function (canvas) {
         ////////////////////////////////////////////////////////////////////////////////////
 
         addAxes();
-        Decors();
+        //Decors();
 
 
 
@@ -250,8 +250,8 @@ var MyGL = function (canvas) {
 
         var _forwardCam = new THREE.Vector3();
         _forwardCam.copy(_targetCam);
-                console.log(_forwardCam);
-        var mvtSpeed = 0.2;
+               // console.log(_forwardCam);
+        var mvtSpeed = 1;
 
         switch (key) {
             case 90:
@@ -301,6 +301,9 @@ var MyGL = function (canvas) {
                 //alert("Key pressed was not valid !");
                 break;
         }
+
+        if ( self.objManager != null)
+       		self.objManager.checkProximity(_posCam.x, _posCam.y, _posCam.z);
     };
 
 
@@ -343,7 +346,7 @@ var MyGL = function (canvas) {
         var _diffCam = new THREE.Vector3();
         _diffCam.copy(_targetCam).cross(new THREE.Vector3(0,0,1)).normalize(); // calcul de l'axe de tangage de la camera
 
-        _targetCam.applyAxisAngle ( new THREE.Vector3(0,0,1), deltaX/400 );
+        _targetCam.applyAxisAngle ( _camera.up, deltaX/400 );
         _targetCam.applyAxisAngle ( _diffCam, deltaZ/400 );
     }
 

@@ -5,10 +5,11 @@
  * @returns {{}}
  * @constructor
  */
-var part = function () {
+var Part = function () {
 	var self = {};
 	
 	var isCharged = false;
+	var charging = false;
 	var obj = null;
 	var minX, minY, minZ, maxX, maxY, maxZ;
 	var name;
@@ -20,13 +21,25 @@ var part = function () {
 	self.setCharged = function (value) {
 		obj = value;
 	};
+
+	self.getCharging = function () {
+		return charging;
+	};
+	
+	self.setCharging = function (value) {
+		charging = value;
+	};
+	
 	
 	self.getObj = function () {
 		return obj;
 	};
 	
-	self.setObj = function (value) {
+	self.Obj = function (value) {
+		//alert('obj');
 		obj = value;
+		isCharged = true;
+		//alert('done');
 	};
 	
 	self.getName = function () {

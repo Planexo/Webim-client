@@ -111,9 +111,11 @@ var Api = function(Config){
          * @param final
          */
 		ifc.parts = function (filename, success, failure, final) {
-			var localbaseurl = baseurl+'parts/';
+			var localbaseurl = baseurl;
             //alert('plop');
-			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction, true);
+            //alert(filename);
+
+			get(filename,{},success || initFunction, failure || initFunction, final || initFunction, true);
 		};
 
         /**
@@ -125,7 +127,6 @@ var Api = function(Config){
          */
 		ifc.infos = function (filename, success, failure, final) {
 			var localbaseurl = baseurl+'infos/';
-
 			get(localbaseurl+filename,{},success || initFunction, failure || initFunction, final || initFunction, false);
 		};
 
