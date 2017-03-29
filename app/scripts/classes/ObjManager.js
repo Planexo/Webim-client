@@ -59,11 +59,11 @@ var ObjManager = function (_myGL, table) {
 	};
 
 	var setMtl = function(mtl_resp) {
-		mtlManager.setString(mtl_resp);
-		document.getElementById("buttonCharge").click();
+		mtlManager.setString(mtl_resp,document.getElementById("buttonCharge") );
 		//alert('charged');
 		//mtlManager.generateSidebar(table);
 	};
+
 
 	var defineProximity = function () { // Définis ce qu'est la proximité dans la scène, ie la distance en dessous de laquelle on se considère proche d'une boite ( seuilChargement )
 		var moy= 0;

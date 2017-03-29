@@ -10,12 +10,14 @@ var MtlManager = function () {
 	var self = {};
 	var mtlstring;
 	var mtlobject;
+	var button;
 	/**
 	*
 	* @param _mtlstring: fichier mtl sous forme de string
 	*/
-	self.setString = function(_mtlstring) {
+	self.setString = function(_mtlstring, _button) {
 		mtlstring = _mtlstring;
+		button = _button;
 		self.parse();
 	};
 
@@ -248,8 +250,8 @@ var MtlManager = function () {
 			console.log(err);
 		}
 
-
 		self.mtlobject = mtlobject;
+		button.click();
 		return {err: err, data: mtlobject};
 	};
 
