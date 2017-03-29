@@ -99,33 +99,37 @@ var MyGL = function (canvas) {
             height = 70 * window.innerHeight / 100;
         }
 
-        //objets
-        /*let cube = self.Cube(1, 1, 1);
-        let cube2 = self.Cube(-1, 1, 2);
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////                    CAMERA                           /////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
 
-        _scene.add(cube);
-        _scene.add(cube2);*/
-
+        //Initialise la position et direction de la camera
         _posCam = new THREE.Vector3(10, 10, 2);
         _targetCam = new THREE.Vector3(-0.5, -0.5, 0);
+
+
+        _camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000); // Initialisation caméra 
+
+        _camera.position.set(_posCam.x, _posCam.y, _posCam.z); // Set la position de la camera
+        _camera.up.set(0, 0, 1); // Set le vecteur du haut de la camera
+
         var dir = new THREE.Vector3(0,0,0);
+        _camera.lookAt(dir.add(_posCam).add(_targetCam)); // Set la direction que la caméra regarde ( regarde vers le point : poosition + direction regardée)
 
-        _camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000);
-
-        _camera.position.set(_posCam.x, _posCam.y, _posCam.z);
-        _camera.up.set(0, 0, 1);
-        _camera.lookAt(dir.add(_posCam).add(_targetCam));
-        console.log(dir);
         _camera.updateProjectionMatrix();
         _scene.add(_camera);
-        //alert(_camera.up.z);
-        // create lights
+
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////                    LUMIERES                           /////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+
         var distancetozero = 10000;
 
-        var light1 = new THREE.PointLight(0xffffff, 0.5, distancetozero);
-        var light2 = new THREE.PointLight(0xffffff, 0.5, distancetozero);
-        var light3 = new THREE.PointLight(0xffffff, 0.5, distancetozero);
-        var light4 = new THREE.PointLight(0xffffff, 0.5, distancetozero);
+        var light1 = new THREE.PointLight(0xffffff, 0.7, distancetozero);
+        var light2 = new THREE.PointLight(0xffffff, 0.7, distancetozero);
+        var light3 = new THREE.PointLight(0xffffff, 0.7, distancetozero);
+        var light4 = new THREE.PointLight(0xffffff, 0.7, distancetozero);
 
         var lightdist = 1000;
 
@@ -142,10 +146,22 @@ var MyGL = function (canvas) {
         _scene.add(light3);
         _scene.add(light4);
 
-        addAxes();
-        Decord();
 
-        var spotLight = new THREE.SpotLight(0xffffff);
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////                    ENVIRONNEMENT                      /////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        addAxes();
+        Decors();
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////                    SPOTLIGHT POUR DES OMBRAGES        /////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+        
+        var spotLight = new THREE.SpotLight(0xffffff, 0.4);
         spotLight.position.set(200, 200, 200);
 
         spotLight.castShadow = true;
@@ -157,9 +173,14 @@ var MyGL = function (canvas) {
         spotLight.shadow.camera.far = 4000;
         spotLight.shadow.camera.fov = 30;
 
-        //spotLight.target = cube;
 
         _scene.add(spotLight);
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////                    INITIALISATION RENDERER            /////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
 
         _renderer = new THREE.WebGLRenderer();//{ antialiasing: true }/*{ alpha: true }*/);  //CanvasRenderer();
         _renderer.setSize(width, height);
@@ -169,6 +190,12 @@ var MyGL = function (canvas) {
 
         container.appendChild(_renderer.domElement);
 
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////                    Rajout des callbacks               /////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
         window.addEventListener('resize', onWindowResize, false);
         window.addEventListener('keydown', KeyHandler);
         canvas.addEventListener('mousemove', function (e) { onMouseMove(e); }, false);
@@ -215,7 +242,8 @@ var MyGL = function (canvas) {
         }
     };
 
-    /* Cette fonction gère les appuis sur le clavier
+    /* 
+    	Cette fonction gère les appuis sur le clavier
     */
     var KeyHandler = function (event) {
         var key = event.keyCode;
@@ -257,37 +285,31 @@ var MyGL = function (canvas) {
                 _posCam.sub(_forwardCam);
                // _targetCam.add(_forwardCam);
                 break;
-           /* case 73:
-                // I Handler
-                _posCam.lerp(_targetCam, 0.2);
-                break;
-            case 79:
-                // O Handler
-                _forwardCam.divideScalar(_forwardCam.length());
-                _posCam.add(_forwardCam);
-                break;*/
             default:
                 //alert("Key pressed was not valid !");
                 break;
         }
     };
 
+
+    // gère le mouvement de la souris
     function onMouseMove(evt) {
 
         if (!mouseDown) {
             return;
         }
 
-        evt.preventDefault();
+        evt.preventDefault(); // souris
 
        
       	var deltaX =  (evt.clientX - mouseX);
      	var deltaY = (evt.clientY - mouseY);
         mouseX = evt.clientX;
         mouseY = evt.clientY;
-        rotateScene(-deltaX, -deltaY);
+        rotateCam(-deltaX, -deltaY);
     }
 
+    // Active la rotation quand il y a un clic souris
     function onMouseDown(evt) {
         evt.preventDefault();
         
@@ -296,20 +318,24 @@ var MyGL = function (canvas) {
         mouseY = evt.clientY;
     }
 
+    //Desactive la rotation quand on arrete de cliquer
     function onMouseUp(evt) {
         evt.preventDefault();
 
         mouseDown = false;
     }
 
-    function rotateScene(deltaX, deltaZ) {
+
+    //Fait la rotation de la camera selon l'axe z et l'axe de tangage de la camera
+    function rotateCam(deltaX, deltaZ) {
         var _diffCam = new THREE.Vector3();
-        _diffCam.copy(_targetCam).cross(new THREE.Vector3(0,0,1)).normalize();
+        _diffCam.copy(_targetCam).cross(new THREE.Vector3(0,0,1)).normalize(); // calcul de l'axe de tangage de la camera
 
         _targetCam.applyAxisAngle ( new THREE.Vector3(0,0,1), deltaX/400 );
         _targetCam.applyAxisAngle ( _diffCam, deltaZ/400 );
     }
 
+    //Génère les axes de l'environnement
     var addAxes = function () {
         var material = new THREE.LineBasicMaterial({
             color: 0xFF0000//rouge
@@ -350,32 +376,17 @@ var MyGL = function (canvas) {
         var line3 = new THREE.Line(geometry3, material3);
         _scene.add(line3);
     }
-    /*---------------------------------------------------------------------------------------
-	 *	Scene
-	 * TODO : on pourrait au mieux créer un sous objet 'Scene' qui regroupe toutes les fonctionnalités ci-dessous, permettant
-	 * TODO : ainsi de bien mettre en évidence la logique du code
-	 * Par exemple :
-	 * self.scene = {
-	 * 		"add" : function(element){
-	 * 			_scene.add(element);
-	 * 			_entities.push(element);
-	 *		},
-	 * 		"remove" : function(element){
-	 * 			...
-	 *		}
-	 * };
-	 * Et dans le code, ca donnerait :
-	 * 		MyGL.scene.add(obj);
-	 * plutôt que
-	 * 		MyGL.addOnScene(obj);
-	 *---------------------------------------------------------------------------------------*/
 
-    var Decord = function () {
+
+    var Decors = function () {
+    	// Génère un décors simple : Un sol vert et le ciel
         // Sol
+
         var geometry = new THREE.PlaneGeometry(200, 200);
-        var material = new THREE.MeshBasicMaterial({ color: 0x009900 });
-        var material2 = new THREE.MeshBasicMaterial({ color: 0x0000FF });
+        var material = new THREE.MeshBasicMaterial({ color: 0x009900 }); // Vert
+        var material2 = new THREE.MeshBasicMaterial({ color: 0x0000FF }); // Bleu
         var sol = new THREE.Mesh(geometry, material);
+        sol.position.set(0, 0, -0.2);
 
         var ciel1 = new THREE.Mesh(geometry, material2);
         ciel1.position.set(0, 100, 100);
@@ -465,27 +476,3 @@ var MyGL = function (canvas) {
 };
 
 
-
-//---------------------------------------------------------------------------------------
-//	Examples
-//---------------------------------------------------------------------------------------
-/*
-var mygl = (new MyGL);  
-mygl.initGL("GLDiv");
-mygl.animate();
-
-
-let cube = mygl.Cube(1,1,1); 
-mygl.addOnScene(cube);
-
-mygl.addOnScene(mygl.Cube(1,2,2));
-mygl.addOnScene(mygl.Cube(2,3,2));
-
-mygl.cameraOn(cube);
-
-mygl.removeFromScene(cube);
-
-setTimeout(function () {
-	//mygl.clearScene();
-}, 5000);
-*/
