@@ -187,11 +187,9 @@ var ObjManager = function (_myGL, table) {
 			api.ifc.parts(
                 nomFichier,
                 function (serverResponse) {
-                	//alert('uesh');
+
                     //récupération du matériel dans serverResponse.mtl
                     setMtl(serverResponse.mtl);
-                    console.log(mtlManager.parse());
-                    //alert(mtl);
 
                     //récupération de l'objet serverResponse.obj
                     obj = serverResponse.obj;
@@ -200,7 +198,7 @@ var ObjManager = function (_myGL, table) {
                 }
             );
 		};
-		//alert('infos');
+		
 		loadInformations( fail ); // On va chercher les informations relatives à cet ifc.
 
 

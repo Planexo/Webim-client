@@ -285,6 +285,18 @@ var MyGL = function (canvas) {
                 _posCam.sub(_forwardCam);
                // _targetCam.add(_forwardCam);
                 break;
+            case 65:
+            	// A handler - move down
+                _forwardCam = new THREE.Vector3(0,0,1);
+                _forwardCam.multiplyScalar(mvtSpeed);
+                _posCam.sub(_forwardCam);
+            	break;
+            case 69:
+            	// E handler - move up
+                _forwardCam = new THREE.Vector3(0,0,1);
+                _forwardCam.multiplyScalar(mvtSpeed);
+                _posCam.add(_forwardCam);
+            	break;
             default:
                 //alert("Key pressed was not valid !");
                 break;

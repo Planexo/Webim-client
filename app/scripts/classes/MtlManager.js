@@ -21,25 +21,6 @@ var MtlManager = function () {
 		self.parse();
 	};
 
-	/*self.generateSidebar = function(table) {
-
-		for ( var i=0; i<mtlobject.material.length; i++) {
-			var ligne = table.insertRow(-1);
-			var nom = ligne.insertCell(0);
-			var hideShow = ligne.insertCell(1);
-			var range = ligne.insertCell(2);
-			var color = ligne.insertCell(3);
-
-			var nominnerHTML = mtlobject.material[i].name;
-			var hideShowinnerHTML = '<button class="hideShow" ng-click="hideShow('+i+')">Montrer/Cacher</button>';
-			//angular.element(hideShow).append( $compile(hideShowinnerHTML)($scope) )
-			var rangeinnerHTML = '<input type="range" ng-change="UpdateOpacity('+i+',this.value)" value="100" max="100" min="0"/>';
-			var colorinnerHTML = '<input type="color" ng-change="UpdateColor('+i+',this.value)" />';
-
-		};
-		return content;*
-	};*/
-
 	self.parse = function(){
 		console.log("Parse Started...");
 		var err = null;
