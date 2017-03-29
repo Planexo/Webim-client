@@ -196,8 +196,6 @@ var ObjManager = function (_myGL, table) {
                     //récupération de l'objet serverResponse.obj
                     obj = serverResponse.obj;
 
-					mtlManager.setMaterialColor(0, [1,0,0]);
-					console.log(mtlManager.generate());
                     ReloadScene();
                 }
             );

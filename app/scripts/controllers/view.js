@@ -58,9 +58,10 @@ angular.module('webimClientApp')
          */
 
         $scope.init = function () {
+        	var canvas = document.getElementById("GLDiv");
         	var table = document.getElementById("mtl_table");
 
-            mygl = new MyGL();
+            mygl = new MyGL(canvas);
 			objManager = new ObjManager(mygl, table);
 
             //initialisation de la scène

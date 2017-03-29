@@ -5,7 +5,7 @@
  * @returns {{}}
  * @constructor
  */
-var MyGL = function () {
+var MyGL = function (canvas) {
     var self = {};
 
     //Constantes : Karma rejette l'utilisation de const
@@ -17,6 +17,7 @@ var MyGL = function () {
 	 * Gestion de la caméra
      * @private
      */
+
     var _camera,
         /**
 		 * Gestion de position de la camera
@@ -24,7 +25,7 @@ var MyGL = function () {
          */
          _posCam,
         /**
-		 * Gestion de la position visee par camera
+		 * Gestion de la direction visee par camera
          * @private
          */
          _targetCam,
@@ -43,8 +44,8 @@ var MyGL = function () {
      * @private
      */
     var mouseDown = false;
-    var mouseX = 0;
-    var mouseY = 0;
+    var mouseX = -1;
+    var mouseY = -1;
     /**
      * Liste des éléments ajoutés à la scène
      * @type {Array}
@@ -105,32 +106,34 @@ var MyGL = function () {
         _scene.add(cube);
         _scene.add(cube2);*/
 
-        _posCam = new THREE.Vector3(10, 0, 2);
-        _targetCam = new THREE.Vector3(-1, 0.0, 0.0);
+        _posCam = new THREE.Vector3(10, 10, 2);
+        _targetCam = new THREE.Vector3(-0.5, -0.5, 0);
+        var dir = new THREE.Vector3(0,0,0);
 
-        _camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+        _camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000);
 
         _camera.position.set(_posCam.x, _posCam.y, _posCam.z);
         _camera.up.set(0, 0, 1);
-        _camera.lookAt(_posCam+_targetCam);
+        _camera.lookAt(dir.add(_posCam).add(_targetCam));
+        console.log(dir);
         _camera.updateProjectionMatrix();
         _scene.add(_camera);
         //alert(_camera.up.z);
         // create lights
-        var distancetozero = 5000;
+        var distancetozero = 10000;
 
         var light1 = new THREE.PointLight(0xffffff, 0.5, distancetozero);
-        var light2 = new THREE.PointLight(0x00ff00, 0.5, distancetozero);
-        var light3 = new THREE.PointLight(0xff0000, 0.5, distancetozero);
+        var light2 = new THREE.PointLight(0xffffff, 0.5, distancetozero);
+        var light3 = new THREE.PointLight(0xffffff, 0.5, distancetozero);
         var light4 = new THREE.PointLight(0xffffff, 0.5, distancetozero);
 
-        var lightdist = 30;
+        var lightdist = 1000;
 
         light1.position.set(lightdist, lightdist, lightdist);
 
-        light2.position.set(-lightdist, lightdist, -lightdist);
+        light2.position.set(-lightdist, lightdist, lightdist);
 
-        light3.position.set(lightdist, -lightdist, -lightdist);
+        light3.position.set(lightdist, -lightdist, lightdist);
 
         light4.position.set(-lightdist, -lightdist, lightdist);
 
@@ -168,9 +171,9 @@ var MyGL = function () {
 
         window.addEventListener('resize', onWindowResize, false);
         window.addEventListener('keydown', KeyHandler);
-        window.addEventListener('mousemove', function (e) { onMouseMove(e); }, false);
-        window.addEventListener('mousedown', function (e) { onMouseDown(e); }, false);
-        window.addEventListener('mouseup', function (e) { onMouseUp(e); }, false);
+        canvas.addEventListener('mousemove', function (e) { onMouseMove(e); }, false);
+        canvas.addEventListener('mousedown', function (e) { onMouseDown(e); }, false);
+        canvas.addEventListener('mouseup', function (e) { onMouseUp(e); }, false);
     };
 
     /**
@@ -186,7 +189,8 @@ var MyGL = function () {
      */
     self.render = function () {
         _camera.position.set(_posCam.x, _posCam.y, _posCam.z);
-        _camera.lookAt(_posCam+_targetCam);
+        var dir = new THREE.Vector3(0,0,0);
+        _camera.lookAt(dir.add(_posCam).add(_targetCam));
         _camera.updateProjectionMatrix();
 
         _renderer.render(_scene, _camera);
@@ -217,7 +221,8 @@ var MyGL = function () {
         var key = event.keyCode;
 
         var _forwardCam = new THREE.Vector3();
-        _forwardCam= _targetCam;
+        _forwardCam.copy(_targetCam);
+                console.log(_forwardCam);
         var mvtSpeed = 0.2;
 
         switch (key) {
@@ -225,7 +230,7 @@ var MyGL = function () {
                 // Z Handler
                 _forwardCam.normalize();
                 _forwardCam.multiplyScalar(mvtSpeed);
-                _posCam.sub(_forwardCam);
+                _posCam.add(_forwardCam);
                // _targetCam.sub(_forwardCam);
                 break;
             case 81:
@@ -233,7 +238,7 @@ var MyGL = function () {
                 _forwardCam.cross(_camera.up);
                 _forwardCam.normalize();
                 _forwardCam.multiplyScalar(mvtSpeed);
-                _posCam.add(_forwardCam);
+                _posCam.sub(_forwardCam);
                 //_targetCam.add(_forwardCam);
                 break;
             case 68:
@@ -241,17 +246,18 @@ var MyGL = function () {
                 _forwardCam.cross(_camera.up);
                 _forwardCam.normalize();
                 _forwardCam.multiplyScalar(mvtSpeed);
-                _posCam.sub(_forwardCam);
+                _posCam.add(_forwardCam);
+
               //  _targetCam.sub(_forwardCam);
                 break;
             case 83:
                 // S Handler
                 _forwardCam.normalize();
                 _forwardCam.multiplyScalar(mvtSpeed);
-                _posCam.add(_forwardCam);
+                _posCam.sub(_forwardCam);
                // _targetCam.add(_forwardCam);
                 break;
-            case 73:
+           /* case 73:
                 // I Handler
                 _posCam.lerp(_targetCam, 0.2);
                 break;
@@ -259,7 +265,7 @@ var MyGL = function () {
                 // O Handler
                 _forwardCam.divideScalar(_forwardCam.length());
                 _posCam.add(_forwardCam);
-                break;
+                break;*/
             default:
                 //alert("Key pressed was not valid !");
                 break;
@@ -274,18 +280,17 @@ var MyGL = function () {
 
         evt.preventDefault();
 
-        var deltaX = evt.clientX - mouseX,
-            deltaY = evt.clientY - mouseY;
-        console.log(deltaX);
-        console.log(deltaY);
+       
+      	var deltaX =  (evt.clientX - mouseX);
+     	var deltaY = (evt.clientY - mouseY);
         mouseX = evt.clientX;
         mouseY = evt.clientY;
-        rotateScene(-deltaX, deltaY);
+        rotateScene(-deltaX, -deltaY);
     }
 
     function onMouseDown(evt) {
         evt.preventDefault();
-
+        
         mouseDown = true;
         mouseX = evt.clientX;
         mouseY = evt.clientY;
@@ -299,14 +304,10 @@ var MyGL = function () {
 
     function rotateScene(deltaX, deltaZ) {
         var _diffCam = new THREE.Vector3();
+        _diffCam.copy(_targetCam).cross(new THREE.Vector3(0,0,1)).normalize();
 
-        console.log(_targetCam);
-        _diffCam.subVectors(_posCam, _targetCam);
-
-        var deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(deltaZ/200, 0, deltaX/200, 'XYZ'));
-        _diffCam.applyQuaternion(deltaRotationQuaternion);
-		_targetCam.applyQuaternion(deltaRotationQuaternion);
-        //_targetCam.addVectors(_posCam, _diffCam);
+        _targetCam.applyAxisAngle ( new THREE.Vector3(0,0,1), deltaX/400 );
+        _targetCam.applyAxisAngle ( _diffCam, deltaZ/400 );
     }
 
     var addAxes = function () {
