@@ -31,27 +31,33 @@ angular.module('webimClientApp')
          */
         var objManager = null;
 
-        var generateSidebar = function(mtlManager, table) {
+        var generateSidebar = function(mtlobject, table) {
+            console.log("Generating Sidebar !");
+            if(mtlobject != undefined) {
+                console.log("Non empty object !");
+                for ( var i=0; i<mtlobject.material.length; i++) {
+                    var ligne = table.insertRow(-1);
+                    var nom = ligne.insertCell(0);
+                    var hideShow = ligne.insertCell(1);
+                    var range = ligne.insertCell(2);
+                    var color = ligne.insertCell(3);
 
-			for ( var i=0; i<mtlManager.mtlobject.material.length; i++) {
-				var ligne = table.insertRow(-1);
-				var nom = ligne.insertCell(0);
-				var hideShow = ligne.insertCell(1);
-				var range = ligne.insertCell(2);
-				var color = ligne.insertCell(3);
+                    nom.innerHTML = mtlobject.material[i].name;
+                    //angular.element(nom).append( $compile(nominnerHTML)($scope) );
+                    var hideShowinnerHTML = '<button class="hideShow" ng-click="hideShow('+i+')">Montrer/Cacher</button>';
+                    angular.element(hideShow).append( $compile(hideShowinnerHTML)($scope) );
+                    var rangeinnerHTML = '<input type="range" ng-model="opacity['+i+']" ng-change="UpdateOpacity('+i+')"  max="100" min="0" value="100"/>';
+                    angular.element(range).append( $compile(rangeinnerHTML)($scope) );
+                    var colorinnerHTML = '<input type="color" ng-model="colors['+i+']" ng-change="UpdateColor('+i+')" />';
+                    angular.element(color).append( $compile(colorinnerHTML)($scope) );
 
-				nom.innerHTML = mtlManager.mtlobject.material[i].name;
-				//angular.element(nom).append( $compile(nominnerHTML)($scope) );
-				var hideShowinnerHTML = '<button class="hideShow" ng-click="hideShow('+i+')">Montrer/Cacher</button>';
-				angular.element(hideShow).append( $compile(hideShowinnerHTML)($scope) );
-				var rangeinnerHTML = '<input type="range" ng-model="opacity['+i+']" ng-change="UpdateOpacity('+i+')"  max="100" min="0" value="100"/>';
-				angular.element(range).append( $compile(rangeinnerHTML)($scope) );
-				var colorinnerHTML = '<input type="color" ng-model="colors['+i+']" ng-change="UpdateColor('+i+')" />';
-				angular.element(color).append( $compile(colorinnerHTML)($scope) );
-
-			};
+                }
+            }
 		};
 
+       var generationTable = function (mtlobject) { // Génère le tableau pour modifier le MTL
+            generateSidebar(mtlobject, document.getElementById("mtl_table"));
+       };
 
         /**
          * Fonction d'initilisation appelée au chargement de la vue 'View'
@@ -62,7 +68,7 @@ angular.module('webimClientApp')
         	var table = document.getElementById("mtl_table");
 
             mygl = new MyGL(canvas);
-			objManager = new ObjManager(mygl, table);
+			objManager = new ObjManager(mygl, table, generationTable);
 
             //initialisation de la scène
             mygl.initGL("GLDiv");
@@ -75,14 +81,6 @@ angular.module('webimClientApp')
 			objManager.checkProximity(0,0,0);
 
         };
-
-
-
-
-       $scope.generationTable = function () { // Génère le tableau pour modifier le MTL
-			generateSidebar(objManager.mtlManager, document.getElementById("mtl_table"));
-       };
-
 
        $scope.hideShow = function(id) {
        		objManager.hideShowElement(id);

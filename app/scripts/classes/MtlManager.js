@@ -5,7 +5,7 @@
  * @returns {{}}
  * @constructor
  */
-var MtlManager = function () {
+var MtlManager = function (generationTable) {
 
 	var self = {};
 	var mtlstring;
@@ -17,9 +17,8 @@ var MtlManager = function () {
 	*
 	* @param _mtlstring: fichier mtl sous forme de string
 	*/
-	self.setString = function(_mtlstring, _button) {
+	self.setString = function(_mtlstring) {
 		mtlstring = _mtlstring;
-		button = _button;
 		self.parse();
 	};
 
@@ -253,7 +252,7 @@ var MtlManager = function () {
 		}
 
 		self.mtlobject_original = mtlobject;
-		button.click();
+		generationTable(mtlobject);
 		return {err: err, data: mtlobject};
 	};
 

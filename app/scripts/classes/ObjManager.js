@@ -6,7 +6,7 @@
  * @returns {{}}
  * @constructor
  */
-var ObjManager = function (_myGL, table) {
+var ObjManager = function (_myGL, table, generationTable) {
 	var self = {};
 	
 	//var tableau = table; // pointeur vers le tableau dans la page
@@ -16,7 +16,7 @@ var ObjManager = function (_myGL, table) {
 	var tailleBoiteMoyenne; // taille moyenne des boites
 	var seuilChargement; // Distance en dessous de laquelle on charge l'obj vers lequel on marche
 	var parts = new Array(); // Array qui contient la liste des parties composant l'obj
-	var mtlManager = new MtlManager();
+	var mtlManager = new MtlManager(generationTable);
 	var isDivised = false; // Variable qui va indiquer si l'obj est fournis en tant que pièces détachées ou complet
 	var obj; // Variable qui va stocker l'obj si celui n'a pas été divisé au chargement
 	var numberToLoad = 1; // Nombre de parties adjacentes à afficher
@@ -190,7 +190,7 @@ var ObjManager = function (_myGL, table) {
                 	//alert('uesh');
                     //récupération du matériel dans serverResponse.mtl
                     setMtl(serverResponse.mtl);
-                    console.log(mtlManager.parse());
+                    //console.log(mtlManager.parse());
                     //alert(mtl);
 
                     //récupération de l'objet serverResponse.obj
