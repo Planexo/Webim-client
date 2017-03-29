@@ -105,14 +105,14 @@ var MyGL = function () {
         _scene.add(cube);
         _scene.add(cube2);*/
 
-        _posCam = new THREE.Vector3(10, 10, 2);
-        _targetCam = new THREE.Vector3(0.0, 0.0, 0.0);
+        _posCam = new THREE.Vector3(10, 0, 2);
+        _targetCam = new THREE.Vector3(-1, 0.0, 0.0);
 
         _camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
 
         _camera.position.set(_posCam.x, _posCam.y, _posCam.z);
         _camera.up.set(0, 0, 1);
-        _camera.lookAt(_targetCam);
+        _camera.lookAt(_posCam+_targetCam);
         _camera.updateProjectionMatrix();
         _scene.add(_camera);
         //alert(_camera.up.z);
@@ -186,7 +186,7 @@ var MyGL = function () {
      */
     self.render = function () {
         _camera.position.set(_posCam.x, _posCam.y, _posCam.z);
-        _camera.lookAt(_targetCam);
+        _camera.lookAt(_posCam+_targetCam);
         _camera.updateProjectionMatrix();
 
         _renderer.render(_scene, _camera);
@@ -217,7 +217,7 @@ var MyGL = function () {
         var key = event.keyCode;
 
         var _forwardCam = new THREE.Vector3();
-        _forwardCam.subVectors(_posCam, _targetCam);
+        _forwardCam= _targetCam;
         var mvtSpeed = 0.2;
 
         switch (key) {
@@ -226,7 +226,7 @@ var MyGL = function () {
                 _forwardCam.normalize();
                 _forwardCam.multiplyScalar(mvtSpeed);
                 _posCam.sub(_forwardCam);
-                _targetCam.sub(_forwardCam);
+               // _targetCam.sub(_forwardCam);
                 break;
             case 81:
                 // Q Handler
@@ -234,7 +234,7 @@ var MyGL = function () {
                 _forwardCam.normalize();
                 _forwardCam.multiplyScalar(mvtSpeed);
                 _posCam.add(_forwardCam);
-                _targetCam.add(_forwardCam);
+                //_targetCam.add(_forwardCam);
                 break;
             case 68:
                 // D Handler
@@ -242,14 +242,14 @@ var MyGL = function () {
                 _forwardCam.normalize();
                 _forwardCam.multiplyScalar(mvtSpeed);
                 _posCam.sub(_forwardCam);
-                _targetCam.sub(_forwardCam);
+              //  _targetCam.sub(_forwardCam);
                 break;
             case 83:
                 // S Handler
                 _forwardCam.normalize();
                 _forwardCam.multiplyScalar(mvtSpeed);
                 _posCam.add(_forwardCam);
-                _targetCam.add(_forwardCam);
+               // _targetCam.add(_forwardCam);
                 break;
             case 73:
                 // I Handler
@@ -261,7 +261,7 @@ var MyGL = function () {
                 _posCam.add(_forwardCam);
                 break;
             default:
-                alert("Key pressed was not valid !");
+                //alert("Key pressed was not valid !");
                 break;
         }
     };
@@ -276,9 +276,11 @@ var MyGL = function () {
 
         var deltaX = evt.clientX - mouseX,
             deltaY = evt.clientY - mouseY;
+        console.log(deltaX);
+        console.log(deltaY);
         mouseX = evt.clientX;
         mouseY = evt.clientY;
-        rotateScene(deltaX, deltaY);
+        rotateScene(-deltaX, deltaY);
     }
 
     function onMouseDown(evt) {
@@ -298,12 +300,13 @@ var MyGL = function () {
     function rotateScene(deltaX, deltaZ) {
         var _diffCam = new THREE.Vector3();
 
+        console.log(_targetCam);
         _diffCam.subVectors(_posCam, _targetCam);
 
         var deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(deltaZ/200, 0, deltaX/200, 'XYZ'));
         _diffCam.applyQuaternion(deltaRotationQuaternion);
-
-        _targetCam.addVectors(_posCam, _diffCam);
+		_targetCam.applyQuaternion(deltaRotationQuaternion);
+        //_targetCam.addVectors(_posCam, _diffCam);
     }
 
     var addAxes = function () {
