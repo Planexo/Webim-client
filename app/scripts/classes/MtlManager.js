@@ -5,19 +5,20 @@
  * @returns {{}}
  * @constructor
  */
-var MtlManager = function () {
+var MtlManager = function (generationTable) {
 
 	var self = {};
 	var mtlstring;
 	var mtlobject;
+	var mtlobject_original;
 	var button;
+
 	/**
 	*
 	* @param _mtlstring: fichier mtl sous forme de string
 	*/
-	self.setString = function(_mtlstring, _button) {
+	self.setString = function(_mtlstring) {
 		mtlstring = _mtlstring;
-		button = _button;
 		self.parse();
 	};
 
@@ -231,8 +232,9 @@ var MtlManager = function () {
 			console.log(err);
 		}
 
-		self.mtlobject = mtlobject;
-		button.click();
+		self.mtlobject_original = mtlobject;
+		generationTable(mtlobject);
+		mtlobject = self.mtlobject_original;
 		return {err: err, data: mtlobject};
 	};
 
@@ -331,6 +333,14 @@ var MtlManager = function () {
 		}
 	};
 
+	/**
+	*
+	* @param id: id du matériau
+	* @param visible: transparence (0<=visibility<=1)
+	*/
+	self.reset =  function() {
+		mtlobject = mtlobject_original;
+	};
 	var parseMap = function(line){
 		var obj = {file:null, options:[]};
 		for(var m = 1; m < line.length; m++){
@@ -373,7 +383,7 @@ var MtlManager = function () {
 		}
 
 		return obj;
-	}
+	};
 
 	return self;
 };
