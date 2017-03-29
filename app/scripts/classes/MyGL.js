@@ -104,7 +104,7 @@ var MyGL = function (canvas) {
         ////////////////////////////////////////////////////////////////////////////////////
 
         //Initialise la position et direction de la camera
-        _posCam = new THREE.Vector3(10, 10, 2);
+        _posCam = new THREE.Vector3(50, 50, 2);
         _targetCam = new THREE.Vector3(-0.5, -0.5, 0);
 
 

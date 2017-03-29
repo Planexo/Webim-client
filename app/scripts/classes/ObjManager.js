@@ -45,8 +45,10 @@ var ObjManager = function (_myGL, table) {
 		api.ifc.infos(
 		   nomFichier,
            function (serverResponse) { // Si on trouve les informations, on les parse et les mets en mémoire
+           		console.log(serverResponse);
            			if ( serverResponse.objets != null) { // Si l'obj a été divisé
-						parseBoxes(serverResponse.objets);
+						parseBoxes(serverResponse.infos);
+						console.log(parts);
 						isDivised = true;
 					}else {
 						loadObjTotal();
@@ -181,10 +183,10 @@ var ObjManager = function (_myGL, table) {
 	self.InitialisationIFC = function ( _nomIFC) { // Fonction à appeler à l'initialisation de la page. Va regarder si l'ifc est divisé ou non, charger le mtl et les informations des partie, ou l'obj total le cas échéant
 		nomFichier = _nomIFC;
 
-		var fail = function () { // Fonction pour que cela marche même tant que les routes ne sont pas mis à jour par la partie back-end ( 22/03/2017)
+		var fail = function () { // Fonction pour que cela marche même tant que les routes ne sont pas mis à jour par la partie back-end ( 22/03/2017) ==> routes MAJ
 		//	alert('hello');
 		//	alert(nomFichier);
-			api.ifc.parts(
+			/*api.ifc.parts(
                 nomFichier,
                 function (serverResponse) {
 
@@ -196,9 +198,9 @@ var ObjManager = function (_myGL, table) {
 
                     ReloadScene();
                 }
-            );
+            );*/
 		};
-		
+
 		loadInformations( fail ); // On va chercher les informations relatives à cet ifc.
 
 
