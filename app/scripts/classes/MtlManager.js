@@ -10,6 +10,7 @@ var MtlManager = function () {
 	var self = {};
 	var mtlstring;
 	var mtlobject;
+	var mtlobject_original;
 	/**
 	*
 	* @param _mtlstring: fichier mtl sous forme de string
@@ -249,7 +250,7 @@ var MtlManager = function () {
 		}
 
 
-		self.mtlobject = mtlobject;
+		self.mtlobject_original = mtlobject;
 		return {err: err, data: mtlobject};
 	};
 
@@ -348,6 +349,14 @@ var MtlManager = function () {
 		}
 	};
 
+	/**
+	*
+	* @param id: id du matériau
+	* @param visible: transparence (0<=visibility<=1)
+	*/
+	self.reset =  function() {
+		mtlobject = mtlobject_original;
+	};
 	var parseMap = function(line){
 		var obj = {file:null, options:[]};
 		for(var m = 1; m < line.length; m++){
@@ -390,7 +399,7 @@ var MtlManager = function () {
 		}
 
 		return obj;
-	}
+	};
 
 	return self;
 };
