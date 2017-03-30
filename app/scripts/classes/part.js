@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Part
- * Cet objet représente une partie de l'environnement
+ * Cet objet reprÃ©sente une partie de l'environnement
  * @returns {{}}
  * @constructor
  */
@@ -36,10 +36,8 @@ var Part = function () {
 	};
 	
 	self.Obj = function (value) {
-		//alert('obj');
 		obj = value;
 		isCharged = true;
-		//alert('done');
 	};
 	
 	self.getName = function () {

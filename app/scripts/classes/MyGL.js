@@ -46,6 +46,7 @@ var MyGL = function (canvas) {
     var mouseDown = false;
     var mouseX = -1;
     var mouseY = -1;
+    var up = new THREE.Vector3(0,0,1);
     /**
      * Liste des éléments ajoutés à la scène
      * @type {Array}
@@ -108,7 +109,7 @@ var MyGL = function (canvas) {
         _targetCam = new THREE.Vector3(-0.5, -0.5, 0);
 
 
-        _camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000); // Initialisation caméra 
+        _camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 10000); // Initialisation caméra 
 
         _camera.position.set(_posCam.x, _posCam.y, _posCam.z); // Set la position de la camera
         _camera.up.set(0, 0, 1); // Set le vecteur du haut de la camera
@@ -297,6 +298,10 @@ var MyGL = function (canvas) {
                 _forwardCam.multiplyScalar(mvtSpeed);
                 _posCam.add(_forwardCam);
             	break;
+            case 70:
+            	// F handler - rotate left
+            	up = up.applyAxisAngle(_forwardCam,0.2 );
+            	_camera.up.copy(up);
             default:
                 //alert("Key pressed was not valid !");
                 break;
@@ -344,9 +349,9 @@ var MyGL = function (canvas) {
     //Fait la rotation de la camera selon l'axe z et l'axe de tangage de la camera
     function rotateCam(deltaX, deltaZ) {
         var _diffCam = new THREE.Vector3();
-        _diffCam.copy(_targetCam).cross(new THREE.Vector3(0,0,1)).normalize(); // calcul de l'axe de tangage de la camera
+        _diffCam.copy(_targetCam).cross(up).normalize(); // calcul de l'axe de tangage de la camera
 
-        _targetCam.applyAxisAngle ( _camera.up, deltaX/400 );
+        _targetCam.applyAxisAngle ( up, deltaX/400 );
         _targetCam.applyAxisAngle ( _diffCam, deltaZ/400 );
     }
 

@@ -19,6 +19,7 @@ var MtlManager = function (generationTable) {
 	*/
 	self.setString = function(_mtlstring) {
 		mtlstring = _mtlstring;
+		console.log(mtlstring);
 		self.parse();
 	};
 
@@ -48,7 +49,7 @@ var MtlManager = function (generationTable) {
 				var last_line = num_lines - 1;
 
 				for(var i = 0; i <= last_line; i++){
-					line = lines[i];
+					line = lines[i].replace("    ","");
 
 					if(line == undefined || line == '' || line == null){
 						if(i == last_line && obj != null){
@@ -76,7 +77,7 @@ var MtlManager = function (generationTable) {
 
 						continue;
 					}
-
+					
 					line = line.split(' ');
 
 					c_type = line[0];
@@ -236,6 +237,7 @@ var MtlManager = function (generationTable) {
 		self.mtlobject = mtlobject;
 		generationTable(mtlobject);
 		mtlobject = self.mtlobject_original;
+		console.log(mtlobject);
 		return {err: err, data: mtlobject};
 	};
 
@@ -293,6 +295,7 @@ var MtlManager = function (generationTable) {
 			});
 
 		});
+		console.log(text);
 		return text;
 	};
 
@@ -342,6 +345,7 @@ var MtlManager = function (generationTable) {
 	self.reset =  function() {
 		mtlobject = mtlobject_original;
 	};
+
 	var parseMap = function(line){
 		var obj = {file:null, options:[]};
 		for(var m = 1; m < line.length; m++){
