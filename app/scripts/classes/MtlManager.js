@@ -61,7 +61,7 @@ var MtlManager = function (generationTable) {
 
 					if(line.charAt(0) == "#"){
 						if(isHeader){
-							if(!mtlobject.header){mtlobject.header = [];alert('plop');}
+							if(!mtlobject.header){mtlobject.header = [];}
 
 							mtlobject.header.push(line);
 						}

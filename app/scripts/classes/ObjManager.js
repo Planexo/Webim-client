@@ -92,11 +92,15 @@ var ObjManager = function (_myGL, table, generationTable) {
 			var ok = false;
 			parts.forEach( function(element, index) {
 				//alert('hello');
-				if ( element.getCharged() == false && element.getCharging() == false ) { // Si l'obj n'a pas déjà été chargé, on vérifie si il faut le charger ou non
+				if ( element.getCharged() == false ) { // Si l'obj n'a pas déjà été chargé, on vérifie si il faut le charger ou non
 					//alert('plop');
 					if ( element.distance(x,y,z) <= ( seuilChargement + (numberToLoad-1) * tailleBoiteMoyenne  ) ) { // Charge les parties les plus proches, mais aussi celles qui sont adjacentes si on veut en afficher plus d'un coup
 						loadObjPart( index );
 					}
+				}
+				if ( element.getCharged() == true && element.getDisplay() == false ) {
+					element.setDisplay(true);
+					ReloadScene();
 				}			
 			});
 			
@@ -108,22 +112,12 @@ var ObjManager = function (_myGL, table, generationTable) {
 		api.ifc.parts(
 		   '/obj/' + nomFichier + '.obj/part/' +  part_id,
            function (serverResponse) {
-           			//console.log(parts[part_id].getCharged());
-           			//console.log(parts[part_id]);
 					parts[part_id].Obj(serverResponse.content);
-           			//alert('before');
-           			//console.log(serverResponse);
-           			//alert(parts[part_id].getCharged());
-           			//console.log(serverResponse.content);
-					//alert('after');
-					//console.log(serverResponse);
-					ReloadScene();
            }
         );
 	};
 ///obj/Paris2010.obj/part/0
 	var loadObjTotal = function () { // Charge l'obj total, ie sans division
-		alert('Objtot');
 		api.ifc.parts(
 		   '/ifc/parts/' + nomFichier,
            function (serverResponse) {

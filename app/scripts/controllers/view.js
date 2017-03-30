@@ -71,8 +71,8 @@ angular.module('webimClientApp')
             mygl.animate();
 
 			
-			//objManager.InitialisationIFC( '1.ifc');
-			objManager.InitialisationIFC( 'Paris2010');
+			objManager.InitialisationIFC( '1.ifc');
+			//objManager.InitialisationIFC( 'Paris2010');
 
 			objManager.checkProximity(0,0,0);
 
@@ -84,7 +84,6 @@ angular.module('webimClientApp')
 
 
        $scope.resetMTL = function() {
-       	alert('plop');
        		objManager.resetMTL();
        };
 

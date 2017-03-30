@@ -9,7 +9,7 @@ var Part = function () {
 	var self = {};
 	
 	var isCharged = false;
-	var charging = false;
+	var displayed = false;
 	var obj = null;
 	var minX, minY, minZ, maxX, maxY, maxZ;
 	var name;
@@ -22,12 +22,12 @@ var Part = function () {
 		obj = value;
 	};
 
-	self.getCharging = function () {
-		return charging;
+	self.getDisplay = function () {
+		return displayed;
 	};
 	
-	self.setCharging = function (value) {
-		charging = value;
+	self.setDisplay = function (value) {
+		displayed = value;
 	};
 	
 	
